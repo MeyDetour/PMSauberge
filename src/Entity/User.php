@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -18,11 +21,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user'])]
+    #[Groups(['user','bed'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['user'])]
+    #[Groups(['user','bed'])]
     private ?string $email = null;
 
     /**
@@ -37,6 +40,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $firstName = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $lastName = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $CreatedAt = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $website = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $profession = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $phoneNumber = null;
+
+    /**
+     * @var Collection<int, Bed>
+     */
+    #[ORM\OneToMany(targetEntity: Bed::class, mappedBy: 'cleanedBy')]
+    private Collection $bedsCleaned;
+
+    /**
+     * @var Collection<int, Bed>
+     */
+    #[ORM\OneToMany(targetEntity: Bed::class, mappedBy: 'inspectedBy')]
+    private Collection $bedsInspected;
+
+    public function __construct()
+    {
+        $this->bedsCleaned = new ArrayCollection();
+        $this->bedsInspected = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -111,5 +150,137 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(?string $firstName): static
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): static
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->CreatedAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $CreatedAt): static
+    {
+        $this->CreatedAt = $CreatedAt;
+
+        return $this;
+    }
+
+    public function getWebsite(): ?string
+    {
+        return $this->website;
+    }
+
+    public function setWebsite(?string $website): static
+    {
+        $this->website = $website;
+
+        return $this;
+    }
+
+    public function getProfession(): ?string
+    {
+        return $this->profession;
+    }
+
+    public function setProfession(string $profession): static
+    {
+        $this->profession = $profession;
+
+        return $this;
+    }
+
+    public function getPhoneNumber(): ?string
+    {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber(string $phoneNumber): static
+    {
+        $this->phoneNumber = $phoneNumber;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Bed>
+     */
+    public function getBedsCleaned(): Collection
+    {
+        return $this->bedsCleaned;
+    }
+
+    public function addBedsCleaned(Bed $bedsCleaned): static
+    {
+        if (!$this->bedsCleaned->contains($bedsCleaned)) {
+            $this->bedsCleaned->add($bedsCleaned);
+            $bedsCleaned->setCleanedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBedsCleaned(Bed $bedsCleaned): static
+    {
+        if ($this->bedsCleaned->removeElement($bedsCleaned)) {
+            // set the owning side to null (unless already changed)
+            if ($bedsCleaned->getCleanedBy() === $this) {
+                $bedsCleaned->setCleanedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Bed>
+     */
+    public function getBedsInspected(): Collection
+    {
+        return $this->bedsInspected;
+    }
+
+    public function addBedsInspected(Bed $bedsInspected): static
+    {
+        if (!$this->bedsInspected->contains($bedsInspected)) {
+            $this->bedsInspected->add($bedsInspected);
+            $bedsInspected->setInspectedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBedsInspected(Bed $bedsInspected): static
+    {
+        if ($this->bedsInspected->removeElement($bedsInspected)) {
+            // set the owning side to null (unless already changed)
+            if ($bedsInspected->getInspectedBy() === $this) {
+                $bedsInspected->setInspectedBy(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -1,3 +1,91 @@
 body {
-    background-color: skyblue;
+    overflow-x: hidden;
+
+    width: 100vw;
+
+    background: linear-gradient(356deg, #073259, #040721);
+
+    color: #ade4ff;
+    text-shadow: #ffffffe3 0px 0px 4px;
+    font-family: monospace;
+    font-size: 1.2em;
+}
+
+/*===============BASIC CLASS=============*/
+hr {
+    background: white;
+    height: 1px;
+    width: 100%;
+}
+
+pre {
+    background: #393939;
+    border: #575757 1px solid;
+    padding: 10px;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    color: antiquewhite;
+    position: relative;
+}
+kbd{
+    background: #13314b;
+    padding: 7px 14px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: #184267 2px solid;
+    margin-inline: 25px;
+}
+/*=======================================*/
+.container {
+    width: 100%;
+    height: 100%;
+
+    padding: 130px;
+    box-sizing: border-box;
+}
+
+.categoryContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: 100%;
+}
+
+.routeContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.route {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    border: wheat 1px solid;
+    width: 50%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.route .name {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-transform: capitalize;
+}
+.route .json{
+    position: absolute;
+
+    font-size: 15px;
+    top: 10px;
+    right: 10px;
+
+
+    color: #756c6c;
+    text-shadow: #1a1a1a 0px 0px 10px;
+}
+.route .json {
 }

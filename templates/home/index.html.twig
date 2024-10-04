@@ -4,4 +4,46 @@
 
 {% block body %}
 
+    <div class="container">
+
+        {% for name,AllRouteOfName in routes %}
+            <div class="categoryContainer">
+                <h1>{{ name }}</h1>
+                <hr>
+                <div class="routeContainer">
+
+                    {% for route in AllRouteOfName %}
+                        <div class="route">
+                            <span class="name">{{ route.name }} : {{ route.route|raw }} <kbd
+                                        class="">{{ route.methode }}</kbd></span>
+
+                            <div style="width: 100%; margin-block: 10px">
+
+                         Body :
+                            {% if route.body %}
+                                <pre class=""><span
+                                            class="json">Json</span>     {{ route.body|json_encode(constant('JSON_PRETTY_PRINT')) }}   </pre>
+                            {% else %}
+                                No body
+
+                            {% endif %}    </div>
+                            <div style="width: 100%; margin-block: 10px">
+                            Data send back :
+                            {% if route.sendBack %}
+
+                                <pre class=""><span
+                                            class="json">Json</span>     {{ route.sendBack|json_encode(constant('JSON_PRETTY_PRINT')) }}   </pre>
+                            {% else %}No data send back
+                            {% endif %}
+                                </div>
+                            <span class="">Authentication token ? {{ route.token ? "Yes":"No" }}</span>
+                        </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+
+        {% endfor %}
+
+    </div>
 {% endblock %}
