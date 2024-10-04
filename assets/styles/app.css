@@ -2,11 +2,12 @@ body {
     overflow-x: hidden;
 
     width: 100vw;
+    min-height: 100vh;
 
-    background: linear-gradient(356deg, #073259, #040721);
+    background: linear-gradient(0deg, #073259, #040721);
 
-    color: #ade4ff;
-    text-shadow: #ffffffe3 0px 0px 4px;
+    color: #f7f7f7;
+    text-shadow: #ffffffe3 0px 0px 1px;
     font-family: monospace;
     font-size: 1.2em;
 }
@@ -17,7 +18,15 @@ hr {
     height: 1px;
     width: 100%;
 }
-
+details{
+    margin-block: 30px;
+    width: 100%;
+}
+summary{
+    font-size: 2em;
+    color: #ade4ff;
+    cursor: pointer;
+}
 pre {
     background: #393939;
     border: #575757 1px solid;
@@ -27,6 +36,11 @@ pre {
     box-sizing: border-box;
     color: antiquewhite;
     position: relative;
+    text-shadow: none;
+
+    word-wrap: break-word;
+    white-space: pre-wrap;
+
 }
 kbd{
     background: #13314b;
@@ -64,9 +78,8 @@ kbd{
     display: flex;
     flex-direction: column;
     align-items: start;
-    border: wheat 1px solid;
-    width: 50%;
-    padding: 20px;
+    width: 49%;
+    padding: 114px 60px;
     box-sizing: border-box;
 }
 
@@ -74,7 +87,10 @@ kbd{
     display: flex;
     flex-direction: row;
     align-items: center;
-    text-transform: capitalize;
+
+    color: #ade4ff;
+    font-weight: bold;
+    font-size: 1.3em;
 }
 .route .json{
     position: absolute;

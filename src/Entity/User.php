@@ -42,21 +42,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['user'])]
     private ?string $firstName = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['user'])]
     private ?string $lastName = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $CreatedAt = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['user'])]
     private ?string $website = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['user'])]
     private ?string $profession = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['user'])]
     private ?string $phoneNumber = null;
 
     /**

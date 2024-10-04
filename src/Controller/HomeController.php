@@ -15,6 +15,44 @@ class HomeController extends AbstractController
             "Send back data for get rooms"
         ];
         $routes = [
+            'User' => [
+                [
+                    'name' => 'Sign in',
+                    'route' => '/api/login_check',
+                    'methode' => 'GET',
+                    'body' => [
+                        "username" => "your email",
+                        "password" => "your email"
+                    ],
+                    'sendBack' => ["token" => "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MjgwNzAzMTEsImV4cCI6MTcyODQzMDMxMSwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6Im1leSJ9.DqW5kXcBBIdovh5Jv7pz7p9R61ydZtW5V-puOYFpc0Idcmd_cgBQh8Hwh8MDOHvH4avrwV2_QmHRrYYpmvWmRhL99_1ukcU4ltuI_h8yUtc-tQ-dd-vf94CsreOtJ_FIs27CnHODx20JzQkKG9XNmjW8GhV02aIjFjXVm_3HlgoSoY_mjxs3FUHd1_K0-73dbXnKQc44onNATm-BeC12oWCuUm8UPNXoL71LXw6CD91duK6eSs53E165jHXFJTLHW3lS5UPKksPSHHQJq_YEBXusnA1LEP-L3NydRLiWTegjPpd7Fh8DPODNXlOTpQ7PSb-YAHJbpU6rCxqgFw-A4g"],
+                    'token' => false
+                ], [
+                    'name' => 'Sign up',
+                    'route' => '/register',
+                    'methode' => 'POST',
+                    'body' => [
+                        "email" => "jeanluc@gmail.com",
+                        "password" => "jeanLucLeSuperHéro",
+                        "firstName" => "Jean",
+                        "lastName" => "DEBOIT",
+                        "profession" => "housekeeper",
+                        "phoneNumber" => "078265253125"
+                    ],
+                    'sendBack' => [
+                        "id" => 10,
+                        "email" => "jeanluc@gmail.com",
+                        "roles" => [
+                            "ROLE_USER"
+                        ],
+                        "firstName" => "Jean",
+                        "lastName" => "DEBOIT",
+                        "website" => null,
+                        "profession" => "housekeeper",
+                        "phoneNumber" => "078265253125"
+                    ],
+                    'token' => false
+                ],
+            ],
             'Room' => [
                 [
                     'name' => 'Get Rooms',
