@@ -51,6 +51,52 @@ class HomeController extends AbstractController
                         "phoneNumber" => "078265253125"
                     ],
                     'token' => false
+                ], [
+                    'name' => 'Get employees',
+                    'route' => '/api/users',
+                    'methode' => 'GET',
+                    'body' => null,
+                    'sendBack' =>
+                        [
+                            "id" => 5,
+                            "email" => "email",
+                            "roles" => [
+                                "ROLE_USER"
+                            ],
+                            "firstName" => "string",
+                            "lastName" => "string",
+                            "website" => "string",
+                            "profession" => "string",
+                            "phoneNumber" => "string"
+                            ,
+                        ],["..."]
+                    , 'token' => true
+                ], [
+                    'name' => 'edit one user if you are admin',
+                    'route' => '/api/user/edit/{id}',
+                    'methode' => 'PUT',
+                    'body' => [
+                        "username" => "email",
+                        "firstName" => "string",
+                        "lastName" => "string",
+                        "website" => "string",
+                        "profession" => "string",
+                        "phoneNumber" => "string"
+                    ],
+                    'sendBack' =>
+                        [
+                            "id" => 5,
+                            "email" => "email",
+                            "roles" => [
+                                "ROLE_USER"
+                            ],
+                            "firstName" => "string",
+                            "lastName" => "string",
+                            "website" => "string",
+                            "profession" => "string",
+                            "phoneNumber" => "string"
+                        ]
+                    , 'token' => true
                 ],
             ],
             'Room' => [
@@ -74,24 +120,9 @@ class HomeController extends AbstractController
                                 "cleanedBy" => null,
                                 "inspectedBy" => null
                             ],
-                            [
-                                "id" => 218,
-                                "isDunkBed" => false,
-                                "isSittingApart" => false,
-                                "state" => "inspected",
-                                "number" => 1,
-                                "cleanedBy" => null,
-                                "inspectedBy" => null
-                            ],
-                            [
-                                "id" => 219,
-                                "isDunkBed" => false,
-                                "isSittingApart" => false,
-                                "state" => "inspected",
-                                "number" => 2,
-                                "cleanedBy" => null,
-                                "inspectedBy" => null
-                            ]
+
+                            "..."
+
                         ]
                     ],
                     'sendBack' => "",
