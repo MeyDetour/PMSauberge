@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Bed;
 use App\Entity\Room;
+use App\Entity\Settings;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -25,6 +26,13 @@ class AppFixtures extends Fixture
         $user->setRoles(["ROLE_ADMIN"]);
         $user->setPhoneNumber("07 82 40 80 49");
         $manager->persist($user);
+
+        $settings = new Settings();
+        $settings->setTheWebsiteOpen(false);
+        $settings->setOtherSharedRoom('Cinema');
+
+        $manager->persist($settings);
+
         $manager->flush();
 
         $count = 0;

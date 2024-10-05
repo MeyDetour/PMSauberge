@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Settings;
 use App\Entity\User;
+use App\Repository\SettingsRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,10 +18,9 @@ use Symfony\Component\Serializer\SerializerInterface;
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register',methods: ['POST'])]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, SerializerInterface $serializer, UserRepository $userRepository): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, SerializerInterface $serializer, UserRepository $userRepository, SettingsRepository $settingsRepository): Response
     {
         $user = $serializer->deserialize($request->getContent(), User::class, 'json');
-
         $userExisted = $userRepository->findOneBy(['email' => $user->getEmail()]);
 
         if ($userExisted) {
@@ -30,6 +31,16 @@ class RegistrationController extends AbstractController
 
         $user->setCreatedAt(new \DateTimeImmutable());
         $entityManager->persist($user);
+
+        if(count(   $settingsRepository->findAll() ) == 0){
+            $settings = new Settings();
+            $settings->setTheWebsiteOpen(false);
+            $settings->setOtherSharedRoom('Cinema');
+
+            $entityManager->persist($settings);
+        }
+
+
         $entityManager->flush();
 
         return $this->json([$user], 409, [], ['groups' => ['user']]);

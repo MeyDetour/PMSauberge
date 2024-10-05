@@ -51,6 +51,17 @@ class RoomController extends AbstractController
     {
 
         $room2 = $serializer->deserialize($request->getContent(), Room::class, 'json');
+
+        if (!is_bool($room2->hasLocker())) {
+            return $this->json(["message" => "Has the room a locker ?"], 406, [], ['groups' => 'rooms']);
+        }
+        if (!is_bool($room2->hasPrivateShowerroom())) {
+            return $this->json(["message" => "Has the room a Showerroom ?"], 406, [], ['groups' => 'rooms']);
+        }
+        if (!is_bool($room2->isPrivate())) {
+            return $this->json(["message" => "Is the room private ?"], 406, [], ['groups' => 'rooms']);
+        }
+
         $room->setName($room2->getName());
         $room->setPrivate($room2->isPrivate());
         $room->setHasLocker($room2->hasLocker());

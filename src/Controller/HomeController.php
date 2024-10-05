@@ -69,7 +69,7 @@ class HomeController extends AbstractController
                             "profession" => "string",
                             "phoneNumber" => "string"
                             ,
-                        ],["..."]
+                        ], ["..."]
                     , 'token' => true
                 ], [
                     'name' => 'edit one user if you are admin',
@@ -98,6 +98,33 @@ class HomeController extends AbstractController
                         ]
                     , 'token' => true
                 ],
+            ],
+            'settings' => [
+                [
+                    'name' => 'Get settings',
+                    'route' => '/api/settings/get',
+                    'methode' => 'GET',
+                    'body' => null,
+                    'sendBack' => [
+                        "id" => 1,
+                        "isTheWebsiteOpen" => "boolean",
+                        "belongings" => "string contatened with ','",
+                        "otherSharedRoom" => "string contatened with ','"
+                    ],
+                    'token' => false
+                ],   [
+                    'name' => 'Edit settings',
+                    'route' => '/api/settings/edit',
+                    'methode' => 'PUT',
+                    'body' =>  [
+                        "isTheWebsiteOpen" => "boolean",
+                        "belongings" => "string contatened with ','",
+                        "otherSharedRoom" => "string contatened with ','"
+                    ],
+                    'sendBack' => [
+                     "message"=>"ok"  ],
+                    'token' => false
+                ]
             ],
             'Room' => [
                 [
