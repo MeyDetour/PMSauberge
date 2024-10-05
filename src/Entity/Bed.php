@@ -46,6 +46,9 @@ class Bed
     #[ORM\ManyToOne(inversedBy: 'bedsInspected')]
     #[Groups(['bed','rooms_and_bed'])]
     private ?User $inspectedBy = null;
+
+    #[ORM\Column]
+    private ?bool $isDoubleBed = null;
     public function getId(): ?int
     {
         return $this->id;
@@ -131,6 +134,18 @@ class Bed
     public function setInspectedBy(?User $inspectedBy): static
     {
         $this->inspectedBy = $inspectedBy;
+
+        return $this;
+    }
+
+    public function isDoubleBed(): ?bool
+    {
+        return $this->isDoubleBed;
+    }
+
+    public function setDoubleBed(bool $isDoubleBed): static
+    {
+        $this->isDoubleBed = $isDoubleBed;
 
         return $this;
     }

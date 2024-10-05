@@ -34,6 +34,8 @@ class BedController extends AbstractController
         }
         if (!is_bool($bed->isSittingApart())) {
             return $this->json(["message" => "Is the bed sitting apart ?"], 406, [], ['groups' => 'rooms']);
+        }  if (!is_bool($bed->isDoubleBed())) {
+            return $this->json(["message" => "Is the bed a double bed ?"], 406, [], ['groups' => 'rooms']);
         }
         if (!in_array($bed->getState(), $this->stateValueAccepted)) {
             return $this->json(["message" => "Not accepted value given for bed's state"], 406, [], ['groups' => 'rooms']);
@@ -71,8 +73,22 @@ class BedController extends AbstractController
     public function edit(Bed $bed, Request $request, SerializerInterface $serializer, EntityManagerInterface $manager, RoomRepository $roomRepository): Response
     {
         $editedBed = $serializer->deserialize($request->getContent(), Bed::class, 'json');
-
+        if (!is_bool($editedBed->isDunkBed())) {
+            return $this->json(["message" => "Is the bed a dunk bed ?"], 406, [], ['groups' => 'rooms']);
+        }
+        if (!is_bool($editedBed->isSittingApart())) {
+            return $this->json(["message" => "Is the bed sitting apart ?"], 406, [], ['groups' => 'rooms']);
+        }  if (!is_bool($editedBed->isDoubleBed())) {
+        return $this->json(["message" => "Is the bed a double bed ?"], 406, [], ['groups' => 'rooms']);
+    }
+        if (!in_array($editedBed->getState(), $this->stateValueAccepted)) {
+            return $this->json(["message" => "Not accepted value given for bed's state"], 406, [], ['groups' => 'rooms']);
+        }
+        if (!is_int($editedBed->getNumber())) {
+            return $this->json(["message" => "Not accepted value given for bed's state"], 406, [], ['groups' => 'rooms']);
+        }
         $bed->setDunkBed($editedBed->isDunkBed());
+        $bed->setDoubleBed($editedBed->isDoubleBed());
         $bed->setState($editedBed->getState());
         $bed->setSittingApart($editedBed->isSittingApart());
         $bed->setNumber($editedBed->getNumber());

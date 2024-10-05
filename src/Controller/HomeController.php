@@ -203,6 +203,7 @@ class HomeController extends AbstractController
                             "name" => "room1",
                             "hasPrivateShowerroom" => false,
                             "hasLocker" => false,
+                            "isDoubleBed" => false,
                             "isPrivate" => false
                         ]
                     ],
@@ -212,6 +213,8 @@ class HomeController extends AbstractController
                     'route' => '/api/bed/new',
                     'methode' => 'POST',
                     'body' => [
+
+                        "doubleBed" => false,
                         "dunkBed" => false,
                         "sittingApart" => false,
                         "state" => "blocked, cleaned, inspected, notcleaned ",
@@ -224,12 +227,16 @@ class HomeController extends AbstractController
                     'route' => '/api/bed/edit/{id}',
                     'methode' => 'PUT',
                     'body' => [
+
+                        "doubleBed" => false,
                         "dunkBed" => false,
                         "sittingApart" => false,
                         "state" => "  blocked, cleaned, inspected, notcleaned ",
                         "room" => "the ID of room (int)"
                     ],
                     'sendBack' => ["id" => 13,
+
+                        "isDoubleBed" => false,
                         "isDunkBed" => false,
                         "isSittingApart" => true,
                         "state" => "cleaned",
