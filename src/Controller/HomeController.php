@@ -112,17 +112,17 @@ class HomeController extends AbstractController
                         "otherSharedRoom" => "string contatened with ','"
                     ],
                     'token' => false
-                ],   [
+                ], [
                     'name' => 'Edit settings',
                     'route' => '/api/settings/edit',
                     'methode' => 'PUT',
-                    'body' =>  [
+                    'body' => [
                         "isTheWebsiteOpen" => "boolean",
                         "belongings" => "string contatened with ','",
                         "otherSharedRoom" => "string contatened with ','"
                     ],
                     'sendBack' => [
-                     "message"=>"ok"  ],
+                        "message" => "ok"],
                     'token' => false
                 ]
             ],
@@ -139,15 +139,16 @@ class HomeController extends AbstractController
                         "isPrivate" => false,
                         "beds" => [
                             [
-                                "id" => 217,
-                                "isDunkBed" => false,
-                                "isSittingApart" => false,
+                                "id" => "int",
+                                "isSittingApart" => "boolean",
                                 "state" => "inspected",
-                                "number" => 0,
-                                "cleanedBy" => null,
-                                "inspectedBy" => null
+                                "number" => "int",
+                                "isDoubleBed" => "int",
+                                "bedShape" => "string",
+                                "hasLamp" => "boolean",
+                                "hasLittleStorage" => "boolean",
+                                "hasShelf" => "boolean",
                             ],
-
                             "..."
 
                         ]
@@ -195,16 +196,29 @@ class HomeController extends AbstractController
                     'methode' => 'GET',
                     'body' => null,
                     'sendBack' => ["id" => 13,
-                        "isDunkBed" => false,
-                        "isSittingApart" => true,
-                        "state" => "cleaned",
+                        "isSittingApart" => "boolean",
+                        "state" => "inspected",
+                        "number" => "int",
+                        "isDoubleBed" => "int",
+                        "bedShape" => "string",
+                        "hasLamp" => "boolean",
+                        "hasLittleStorage" => "boolean",
+
+                        "hasShelf" => "boolean",
+                        "cleanedBy" => [
+                            "id" => "int",
+                            "email" => "string",
+                        ], "inspectedBy" => [
+                            "id" => "int",
+                            "email" => "string",
+                        ],
                         "room" => [
                             "id" => 6,
                             "name" => "room1",
                             "hasPrivateShowerroom" => false,
                             "hasLocker" => false,
-                            "isDoubleBed" => false,
-                            "isPrivate" => false
+                            "isPrivate" => false,
+
                         ]
                     ],
                     'token' => true
@@ -213,39 +227,59 @@ class HomeController extends AbstractController
                     'route' => '/api/bed/new',
                     'methode' => 'POST',
                     'body' => [
-
-                        "doubleBed" => false,
-                        "dunkBed" => false,
-                        "sittingApart" => false,
-                        "state" => "blocked, cleaned, inspected, notcleaned ",
-                        "room" => "the ID of room (int)"
+                        "number" => "int",
+                        "doubleBed" => "boolean",
+                        "dunkBed" => "boolean",
+                        "hasLamp" => "boolean",
+                        "hasLittleStorage" => "boolean",
+                        "hasShelf" => "boolean",
+                        "bedShape" => "topBed,bottomBed,singleBed",
+                        "sittingApart" => "boolean",
+                        "state" => "cleaned,inspected,notCleaned,blocked",
+                        "room" => "int"
                     ],
-                    'sendBack' => "The bed created",
+                    'sendBack' => ['message'=>"ok"],
                     'token' => true
                 ], [
                     'name' => 'Edit bed',
                     'route' => '/api/bed/edit/{id}',
                     'methode' => 'PUT',
-                    'body' => [
-
-                        "doubleBed" => false,
-                        "dunkBed" => false,
-                        "sittingApart" => false,
-                        "state" => "  blocked, cleaned, inspected, notcleaned ",
-                        "room" => "the ID of room (int)"
+                    'body' =>  [
+                        "number" => "int",
+                        "doubleBed" => "boolean",
+                        "dunkBed" => "boolean",
+                        "hasLamp" => "boolean",
+                        "hasLittleStorage" => "boolean",
+                        "hasShelf" => "boolean",
+                        "bedShape" => "topBed,bottomBed,singleBed",
+                        "sittingApart" => "boolean",
+                        "state" => "cleaned,inspected,notCleaned,blocked",
+                        "room" => "int"
                     ],
                     'sendBack' => ["id" => 13,
+                        "isSittingApart" => "boolean",
+                        "state" => "inspected",
+                        "number" => "int",
+                        "isDoubleBed" => "int",
+                        "bedShape" => "string",
+                        "hasLamp" => "boolean",
+                        "hasLittleStorage" => "boolean",
 
-                        "isDoubleBed" => false,
-                        "isDunkBed" => false,
-                        "isSittingApart" => true,
-                        "state" => "cleaned",
+                        "hasShelf" => "boolean",
+                        "cleanedBy" => [
+                            "id" => "int",
+                            "email" => "string",
+                        ], "inspectedBy" => [
+                            "id" => "int",
+                            "email" => "string",
+                        ],
                         "room" => [
                             "id" => 6,
-                            "name" => "the name of room",
+                            "name" => "room1",
                             "hasPrivateShowerroom" => false,
                             "hasLocker" => false,
-                            "isPrivate" => false
+                            "isPrivate" => false,
+
                         ]
                     ],
                     'token' => true

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\BedRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -17,9 +19,6 @@ class Bed
     #[Groups(['bed','rooms_and_bed'])]
     private ?int $id = null;
 
-    #[ORM\Column]
-    #[Groups(['bed','rooms_and_bed'])]
-    private ?bool $isDunkBed = null;
 
     #[ORM\Column]
     #[Groups(['bed','rooms_and_bed'])]
@@ -40,30 +39,48 @@ class Bed
     private ?int $number = null;
 
     #[ORM\ManyToOne(inversedBy: 'bedsCleaned')]
-    #[Groups(['bed','rooms_and_bed'])]
+    #[Groups(['bed'])]
     private ?User $cleanedBy = null;
 
     #[ORM\ManyToOne(inversedBy: 'bedsInspected')]
-    #[Groups(['bed','rooms_and_bed'])]
+    #[Groups(['bed'])]
     private ?User $inspectedBy = null;
 
     #[ORM\Column]
+    #[Groups(['bed','rooms_and_bed'])]
     private ?bool $isDoubleBed = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['bed','rooms_and_bed'])]
+    private ?string $bedShape = null;
+
+    #[ORM\Column]
+    #[Groups(['bed','rooms_and_bed'])]
+    private ?bool $hasLamp = null;
+
+    #[ORM\Column]
+    #[Groups(['bed','rooms_and_bed'])]
+    private ?bool $hasLittleStorage = null;
+
+    #[ORM\Column]
+    #[Groups(['bed','rooms_and_bed'])]
+    private ?bool $hasShelf = null;
+
+    /**
+     * @var Collection<int, Booking>
+     */
+    #[ORM\ManyToMany(targetEntity: Booking::class, mappedBy: 'beds')]
+    private Collection $bookings;
+
+    public function __construct()
+    {
+        $this->bookings = new ArrayCollection();
+    }
+   //topBed - bottomBed - singleBed
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function isDunkBed(): ?bool
-    {
-        return $this->isDunkBed;
-    }
-
-    public function setDunkBed(bool $isDunkBed): static
-    {
-        $this->isDunkBed = $isDunkBed;
-
-        return $this;
     }
 
     public function isSittingApart(): ?bool
@@ -146,6 +163,80 @@ class Bed
     public function setDoubleBed(bool $isDoubleBed): static
     {
         $this->isDoubleBed = $isDoubleBed;
+
+        return $this;
+    }
+
+    public function getBedShape(): ?string
+    {
+        return $this->bedShape;
+    }
+
+    public function setBedShape(?string $bedShape): static
+    {
+        $this->bedShape = $bedShape;
+        return $this;
+    }
+
+    public function hasLamp(): ?bool
+    {
+        return $this->hasLamp;
+    }
+
+    public function setHasLamp(bool $hasLamp): static
+    {
+        $this->hasLamp = $hasLamp;
+
+        return $this;
+    }
+
+    public function hasLittleStorage(): ?bool
+    {
+        return $this->hasLittleStorage;
+    }
+
+    public function setHasLittleStorage(bool $hasLittleStorage): static
+    {
+        $this->hasLittleStorage = $hasLittleStorage;
+
+        return $this;
+    }
+
+    public function hasShelf(): ?bool
+    {
+        return $this->hasShelf;
+    }
+
+    public function setHasShelf(bool $hasShelf): static
+    {
+        $this->hasShelf = $hasShelf;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Booking>
+     */
+    public function getBookings(): Collection
+    {
+        return $this->bookings;
+    }
+
+    public function addBooking(Booking $booking): static
+    {
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings->add($booking);
+            $booking->addBed($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBooking(Booking $booking): static
+    {
+        if ($this->bookings->removeElement($booking)) {
+            $booking->removeBed($this);
+        }
 
         return $this;
     }

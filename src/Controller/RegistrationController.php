@@ -34,7 +34,7 @@ class RegistrationController extends AbstractController
 
         if(count(   $settingsRepository->findAll() ) == 0){
             $settings = new Settings();
-            $settings->setTheWebsiteOpen(false);
+            $settings->setWebsiteOpen(false);
             $settings->setOtherSharedRoom('Cinema');
 
             $entityManager->persist($settings);

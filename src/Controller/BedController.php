@@ -18,6 +18,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 class BedController extends AbstractController
 {
     private array $stateValueAccepted = ["blocked", "cleaned", "inspected", "notCleaned"];
+    private array $bedFormValues = ["topBed", "bottomBed", "singleBed"];
 
     #[Route('/bed/get/{id}', name: 'get_bed', methods: 'GET', priority: 0)]
     public function getBed(Bed $bed): Response
@@ -29,16 +30,27 @@ class BedController extends AbstractController
     public function new(Request $request, SerializerInterface $serializer, EntityManagerInterface $manager, RoomRepository $roomRepository): Response
     {
         $bed = $serializer->deserialize($request->getContent(), Bed::class, 'json');
-        if (!is_bool($bed->isDunkBed())) {
-            return $this->json(["message" => "Is the bed a dunk bed ?"], 406, [], ['groups' => 'rooms']);
-        }
+
         if (!is_bool($bed->isSittingApart())) {
             return $this->json(["message" => "Is the bed sitting apart ?"], 406, [], ['groups' => 'rooms']);
-        }  if (!is_bool($bed->isDoubleBed())) {
+        }
+        if (!is_bool($bed->isDoubleBed())) {
             return $this->json(["message" => "Is the bed a double bed ?"], 406, [], ['groups' => 'rooms']);
+        }
+        if (!is_bool($bed->hasLamp())) {
+            return $this->json(["message" => "Is there bedlight?"], 406, [], ['groups' => 'rooms']);
+        }
+        if (!is_bool($bed->hasLittleStorage())) {
+            return $this->json(["message" => "Is there little storage?"], 406, [], ['groups' => 'rooms']);
+        }
+        if (!is_bool($bed->hasShelf())) {
+            return $this->json(["message" => "Is there shelf storage?"], 406, [], ['groups' => 'rooms']);
         }
         if (!in_array($bed->getState(), $this->stateValueAccepted)) {
             return $this->json(["message" => "Not accepted value given for bed's state"], 406, [], ['groups' => 'rooms']);
+        }
+        if (!in_array($bed->getBedShape(), $this->bedFormValues)) {
+            return $this->json(["message" => "Not accepted value given for bed's shape"], 406, [], ['groups' => 'rooms']);
         }
         if (!is_int($bed->getNumber())) {
             return $this->json(["message" => "Not accepted value given for bed's state"], 406, [], ['groups' => 'rooms']);
@@ -73,22 +85,36 @@ class BedController extends AbstractController
     public function edit(Bed $bed, Request $request, SerializerInterface $serializer, EntityManagerInterface $manager, RoomRepository $roomRepository): Response
     {
         $editedBed = $serializer->deserialize($request->getContent(), Bed::class, 'json');
-        if (!is_bool($editedBed->isDunkBed())) {
-            return $this->json(["message" => "Is the bed a dunk bed ?"], 406, [], ['groups' => 'rooms']);
-        }
+
         if (!is_bool($editedBed->isSittingApart())) {
             return $this->json(["message" => "Is the bed sitting apart ?"], 406, [], ['groups' => 'rooms']);
-        }  if (!is_bool($editedBed->isDoubleBed())) {
-        return $this->json(["message" => "Is the bed a double bed ?"], 406, [], ['groups' => 'rooms']);
-    }
+        }
+        if (!is_bool($editedBed->isDoubleBed())) {
+            return $this->json(["message" => "Is the bed a double bed ?"], 406, [], ['groups' => 'rooms']);
+        }
+        if (!in_array($bed->getBedShape(), $this->bedFormValues)) {
+            return $this->json(["message" => "Not accepted value given for bed's shape"], 406, [], ['groups' => 'rooms']);
+        }
+        if (!is_bool($bed->hasLamp())) {
+            return $this->json(["message" => "Is there bedlight?"], 406, [], ['groups' => 'rooms']);
+        }
+        if (!is_bool($bed->hasLittleStorage())) {
+            return $this->json(["message" => "Is there little storage?"], 406, [], ['groups' => 'rooms']);
+        }
+        if (!is_bool($bed->hasShelf())) {
+            return $this->json(["message" => "Is there shelf storage?"], 406, [], ['groups' => 'rooms']);
+        }
         if (!in_array($editedBed->getState(), $this->stateValueAccepted)) {
             return $this->json(["message" => "Not accepted value given for bed's state"], 406, [], ['groups' => 'rooms']);
         }
         if (!is_int($editedBed->getNumber())) {
             return $this->json(["message" => "Not accepted value given for bed's state"], 406, [], ['groups' => 'rooms']);
         }
-        $bed->setDunkBed($editedBed->isDunkBed());
+        $bed->setBedShape($editedBed->getBedShape());
         $bed->setDoubleBed($editedBed->isDoubleBed());
+        $bed->setHasLamp($editedBed->hasLamp());
+        $bed->setHasLittleStorage($editedBed->hasLittleStorage());
+        $bed->setHasShelf($editedBed->hasShelf());
         $bed->setState($editedBed->getState());
         $bed->setSittingApart($editedBed->isSittingApart());
         $bed->setNumber($editedBed->getNumber());

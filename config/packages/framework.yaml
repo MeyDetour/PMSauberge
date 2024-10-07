@@ -5,7 +5,10 @@ framework:
 
     # Note that the session will be started ONLY if you read or write from it.
     session: true
-
+    serializer:
+        enabled: true
+        default_context:
+            datetime_format: 'Y-m-d H:i' # Format ISO 8601, mais tu peux en changer si besoin
     #esi: true
     #fragments: true
 

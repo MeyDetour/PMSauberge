@@ -28,7 +28,7 @@ class AppFixtures extends Fixture
         $manager->persist($user);
 
         $settings = new Settings();
-        $settings->setTheWebsiteOpen(false);
+        $settings->setWebsiteOpen(false);
         $settings->setOtherSharedRoom('Cinema');
 
         $manager->persist($settings);
@@ -49,8 +49,12 @@ class AppFixtures extends Fixture
                 $bed = new Bed();
                 $bed->setNumber($count);
                 $bed->setState("inspected");
-                $bed->setDunkBed(false);
+                $bed->setBedShape("singleBed");
                 $bed->setSittingApart(false);
+                $bed->setDoubleBed(false);
+                $bed->setHasLamp(false);
+                $bed->setHasLittleStorage(false);
+                $bed->setHasShelf(false);
                 $bed->setRoom($room);
                 $manager->persist($bed);
                 $count++;
