@@ -53,7 +53,7 @@ class Bed
     #[ORM\Column(nullable: true)]
     #[Groups(['bed','rooms_and_bed'])]
     private ?string $bedShape = null;
-
+// topBed,bottomBed,singleBed
     #[ORM\Column]
     #[Groups(['bed','rooms_and_bed'])]
     private ?bool $hasLamp = null;
@@ -71,6 +71,9 @@ class Bed
      */
     #[ORM\ManyToMany(targetEntity: Booking::class, mappedBy: 'beds')]
     private Collection $bookings;
+
+    #[ORM\Column]
+    private ?bool $isOccupied = null;
 
     public function __construct()
     {
@@ -237,6 +240,18 @@ class Bed
         if ($this->bookings->removeElement($booking)) {
             $booking->removeBed($this);
         }
+
+        return $this;
+    }
+
+    public function isOccupied(): ?bool
+    {
+        return $this->isOccupied;
+    }
+
+    public function setOccupied(bool $isOccupied): static
+    {
+        $this->isOccupied = $isOccupied;
 
         return $this;
     }

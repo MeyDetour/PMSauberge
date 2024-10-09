@@ -12,6 +12,14 @@ body {
     font-size: 1.2em;
 }
 
+/*===============COLOR CLASS=============*/
+.intColor{
+    color: #8181ff;
+}.booleanColor{
+    color: #ff8181;
+}.stringColor{
+    color: #b0ff81;
+}
 /*===============BASIC CLASS=============*/
 hr {
     background: white;

@@ -21,8 +21,8 @@ class HomeController extends AbstractController
                     'route' => '/api/login_check',
                     'methode' => 'GET',
                     'body' => [
-                        "username" => "your email",
-                        "password" => "your email"
+                        "username" => "string",
+                        "password" => "string"
                     ],
                     'sendBack' => ["token" => "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MjgwNzAzMTEsImV4cCI6MTcyODQzMDMxMSwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6Im1leSJ9.DqW5kXcBBIdovh5Jv7pz7p9R61ydZtW5V-puOYFpc0Idcmd_cgBQh8Hwh8MDOHvH4avrwV2_QmHRrYYpmvWmRhL99_1ukcU4ltuI_h8yUtc-tQ-dd-vf94CsreOtJ_FIs27CnHODx20JzQkKG9XNmjW8GhV02aIjFjXVm_3HlgoSoY_mjxs3FUHd1_K0-73dbXnKQc44onNATm-BeC12oWCuUm8UPNXoL71LXw6CD91duK6eSs53E165jHXFJTLHW3lS5UPKksPSHHQJq_YEBXusnA1LEP-L3NydRLiWTegjPpd7Fh8DPODNXlOTpQ7PSb-YAHJbpU6rCxqgFw-A4g"],
                     'token' => false
@@ -31,24 +31,24 @@ class HomeController extends AbstractController
                     'route' => '/register',
                     'methode' => 'POST',
                     'body' => [
-                        "email" => "jeanluc@gmail.com",
-                        "password" => "jeanLucLeSuperHéro",
-                        "firstName" => "Jean",
-                        "lastName" => "DEBOIT",
-                        "profession" => "housekeeper",
-                        "phoneNumber" => "078265253125"
+                        "email" => "string",
+                        "password" => "string",
+                        "firstName" => "string",
+                        "lastName" => "string",
+                        "profession" => "string",
+                        "phoneNumber" => "string"
                     ],
                     'sendBack' => [
-                        "id" => 10,
-                        "email" => "jeanluc@gmail.com",
+                        "id" => "int",
+                        "email" => "string",
                         "roles" => [
                             "ROLE_USER"
                         ],
-                        "firstName" => "Jean",
-                        "lastName" => "DEBOIT",
-                        "website" => null,
-                        "profession" => "housekeeper",
-                        "phoneNumber" => "078265253125"
+                        "firstName" =>"string",
+                        "lastName" => "string",
+                        "website" => "string",
+                        "profession" => "string",
+                        "phoneNumber" => "string"
                     ],
                     'token' => false
                 ], [
@@ -58,8 +58,8 @@ class HomeController extends AbstractController
                     'body' => null,
                     'sendBack' =>
                         [
-                            "id" => 5,
-                            "email" => "email",
+                            "id" => "int",
+                            "email" => "string",
                             "roles" => [
                                 "ROLE_USER"
                             ],
@@ -76,7 +76,7 @@ class HomeController extends AbstractController
                     'route' => '/api/user/edit/{id}',
                     'methode' => 'PUT',
                     'body' => [
-                        "username" => "email",
+                        "username" =>"string",
                         "firstName" => "string",
                         "lastName" => "string",
                         "website" => "string",
@@ -85,8 +85,8 @@ class HomeController extends AbstractController
                     ],
                     'sendBack' =>
                         [
-                            "id" => 5,
-                            "email" => "email",
+                            "id" => "int",
+                            "email" => "string",
                             "roles" => [
                                 "ROLE_USER"
                             ],
@@ -108,7 +108,7 @@ class HomeController extends AbstractController
                     'sendBack' => [
                         "id" => 1,
                         "isTheWebsiteOpen" => "boolean",
-                        "belongings" => "string contatened with ','",
+                        "belongings" => "string contatened with ',' ",
                         "otherSharedRoom" => "string contatened with ','"
                     ],
                     'token' => false
@@ -134,16 +134,17 @@ class HomeController extends AbstractController
                     'body' => [
                         "id" => 36,
                         "name" => "Room 0",
-                        "hasPrivateShowerroom" => false,
-                        "hasLocker" => false,
-                        "isPrivate" => false,
+                        "hasPrivateShowerroom" => "boolean",
+                        "hasLocker" => "boolean",
+                        "isPrivate" => "boolean",
                         "beds" => [
                             [
                                 "id" => "int",
                                 "isSittingApart" => "boolean",
-                                "state" => "inspected",
+                                "state" => "inspected,notCleaned,cleaned,blocked",
                                 "number" => "int",
                                 "isDoubleBed" => "int",
+                                "isOccupied"=>"boolean",
                                 "bedShape" => "string",
                                 "hasLamp" => "boolean",
                                 "hasLittleStorage" => "boolean",
@@ -161,10 +162,10 @@ class HomeController extends AbstractController
                     'route' => '/api/room/new',
                     'methode' => 'POST',
                     'body' => [
-                        "name" => "Name of room",
-                        "hasLocker" => false,
-                        "private" => false,
-                        "hasPrivateShowerroom" => false
+                        "name" => "string",
+                        "hasLocker" => "boolean",
+                        "private" => "boolean",
+                        "hasPrivateShowerroom" => "boolean"
                     ],
                     'sendBack' => "The room created",
                     'token' => true
@@ -173,10 +174,10 @@ class HomeController extends AbstractController
                     'route' => '/api/room/edit/{id}',
                     'methode' => 'PUT',
                     'body' => [
-                        "name" => "Changed name",
-                        "hasLocker" => false,
-                        "private" => false,
-                        "hasPrivateShowerroom" => false
+                        "name" => "string",
+                        "hasLocker" => "boolean",
+                        "private" => "boolean",
+                        "hasPrivateShowerroom" => "boolean"
                     ],
                     'sendBack' => "The room modified",
                     'token' => true
@@ -197,9 +198,10 @@ class HomeController extends AbstractController
                     'body' => null,
                     'sendBack' => ["id" => 13,
                         "isSittingApart" => "boolean",
-                        "state" => "inspected",
+                        "state" => "string",
                         "number" => "int",
                         "isDoubleBed" => "int",
+                        "isOccupied"=>"boolean",
                         "bedShape" => "string",
                         "hasLamp" => "boolean",
                         "hasLittleStorage" => "boolean",
@@ -215,9 +217,9 @@ class HomeController extends AbstractController
                         "room" => [
                             "id" => 6,
                             "name" => "room1",
-                            "hasPrivateShowerroom" => false,
-                            "hasLocker" => false,
-                            "isPrivate" => false,
+                            "hasPrivateShowerroom" => "boolean",
+                            "hasLocker" => "boolean",
+                            "isPrivate" => "boolean",
 
                         ]
                     ],
@@ -261,6 +263,7 @@ class HomeController extends AbstractController
                         "state" => "inspected",
                         "number" => "int",
                         "isDoubleBed" => "int",
+                        "isOccupied"=>"boolean",
                         "bedShape" => "string",
                         "hasLamp" => "boolean",
                         "hasLittleStorage" => "boolean",
@@ -276,9 +279,9 @@ class HomeController extends AbstractController
                         "room" => [
                             "id" => 6,
                             "name" => "room1",
-                            "hasPrivateShowerroom" => false,
-                            "hasLocker" => false,
-                            "isPrivate" => false,
+                            "hasPrivateShowerroom" => "boolean",
+                            "hasLocker" => "boolean",
+                            "isPrivate" => "boolean",
 
                         ]
                     ],
@@ -305,12 +308,19 @@ class HomeController extends AbstractController
                     'sendBack' => "ok if it's done",
                     'token' => true
                 ], [
-                    'name' => 'Edit status of bed',
+                    'name' => 'Edit housekeeping status of bed',
                     'route' => '/api/edit/status/{id}',
                     'methode' => 'PATCH',
                     'body' => [
                         "status" => "  blocked, cleaned, inspected, notcleaned "
                     ],
+                    'sendBack' => "ok if it's done",
+                    'token' => true
+                ],[
+                    'name' => 'Toggle occupied state of bed ',
+                    'route' => '/bed/{id}/change/occupation',
+                    'methode' => 'PATCH',
+                    'body' => [ ],
                     'sendBack' => "ok if it's done",
                     'token' => true
                 ],

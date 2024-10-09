@@ -40,4 +40,22 @@ class RoomRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+        /**
+         * @return Room[] Returns an array of Room objects
+         */
+        public function roomPrivateAndFree(): array
+        {
+            return $this->createQueryBuilder('r')
+                ->leftJoin('r.beds','b')
+                ->andWhere('r.isPrivate = :val')
+                ->andWhere('b.isOccupied = :isOccupied')
+                ->andWhere('r.isPrivate = :val')
+                ->setParameter('val', true)
+                ->setParameter('isOccupied', false)
+                ->getQuery()
+                ->getResult()
+                ->getCount()
+            ;
+        }
 }

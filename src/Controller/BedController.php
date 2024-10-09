@@ -71,6 +71,7 @@ class BedController extends AbstractController
 
         // Associer la chambre au lit
         $bed->setRoom($room);
+        $bed->setIsOccupied(false);
         try {
             $manager->persist($bed);
             $manager->flush();
@@ -157,6 +158,15 @@ class BedController extends AbstractController
         $manager->persist($bed);
         $manager->flush();
         return $this->json($bed, 200, [], ['groups' => ['bed', 'rooms']]);
+
+    }   #[Route('/bed/{id}/change/occupation', name: 'change_occupied', methods: "patch",)]
+    public function changeOccupied(Bed $bed, Request $request, EntityManagerInterface $manager, RoomRepository $roomRepository): Response
+    {
+
+        $bed->setOccupied(!$bed->isOccupied());
+        $manager->persist($bed);
+        $manager->flush();
+        return $this->json(['message'=>"ok"], 200);
 
     }
 

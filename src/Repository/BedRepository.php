@@ -40,4 +40,14 @@ class BedRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function countAllBedsInPublicRoom(): array
+    {
+        return $this->createQueryBuilder('b')
+            ->leftJoin('b.room', 'r')
+            ->andWhere('r.isPrivate = :boolean')
+            ->setParameter('boolean', false)
+            ->getQuery()
+            ->getResult()
+            ->getCount();
+    }
 }
