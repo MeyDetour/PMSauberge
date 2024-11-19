@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
+.bodyWhite{
+    background: white;
+}
+.jost{
+    font-family: "Jost", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+.navbar{
+    height: 97vh;
+    width: 13%;
+    margin: 10px;
+    background: #F7F7F7;
+    border: #F1F1F1 2px solid;
+    border-radius: 37px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    padding: 20px;
+    box-sizing: border-box;
+}
+.navbar .header{
+    color: black;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: baseline;
+
+    gap: 17px;
+}
+.navbar .header span{
+
+    text-transform: uppercase;
+    font-size: 23px;
+    font-weight: 500;
+}
+
+.navbar hr{
+    background: #DEDEDE !important;
+}
+
+.navbar ul{
+
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.navbar ul .link{
+    background: #F0F0EF;
+    border-radius: 5px;
+    padding: 10px 15px;
+    gap: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    text-decoration: none;
+    color: black;
+}
+.navbar ul .link span{
+
+    font-size: 22px;
+}
+
+.navbar ul .link svg  path{
+    fill: #EFC85E !important;
+}

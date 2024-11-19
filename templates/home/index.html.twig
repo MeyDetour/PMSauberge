@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Documentation!{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+
+        {% for name,AllRouteOfName in routes %}
+            <div class="categoryContainer">
+                <details>
+                    <summary>   {{ name }}</summary>
+                    <div class="routeContainer">
+
+                        {% for route in AllRouteOfName %}
+                            <div class="route">
+                            <span class="name">{{ route.name }} : {{ route.route }} <kbd
+                                        class="">{{ route.methode }}</kbd></span>
+
+                                <div style="width: 100%; margin-block: 10px">
+
+                                    Body :
+                                    {% if route.body %}
+                                        <pre class=""><span
+                                                    class="json">Json</span>{{ route.body|json_encode(constant('JSON_PRETTY_PRINT')) }}   </pre>
+                                    {% else %}
+                                        No body
+
+                                    {% endif %}    </div>
+                                <div style="width: 100%; margin-block: 10px">
+                                    Data sent back :
+                                    {% if route.sendBack %}
+
+                                        <pre class=""><span
+                                                    class="json">Json</span>{{ route.sendBack|json_encode(constant('JSON_PRETTY_PRINT')) }}   </pre>
+                                    {% else %}No data sent back
+                                    {% endif %}
+                                </div>
+                                <span class="">Authentication token ? {{ route.token ? "Yes":"No" }}</span>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                </details>
+
+                {% if not loop.last %}
+                    <hr>
+
+                {% endif %}
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    <script>
+
+        let allPre = document.querySelectorAll("pre")
+        allPre.forEach((pre) => {
+            let res = pre.innerHTML.replaceAll(`"int"`, "<span class='intColor'>int</span>")
+            res = res.replaceAll(`"boolean"`, "<span class='booleanColor'>boolean</span>")
+            res = res.replaceAll(`"string"`, "<span class='stringColor'>string</span>")
+
+
+
+            pre.innerHTML = res
+        })
+
+    </script>
+{% endblock %}
