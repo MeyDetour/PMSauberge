@@ -13,7 +13,6 @@ class Settings
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['settings'])]
     private ?int $id = null;
 
     #[ORM\Column]

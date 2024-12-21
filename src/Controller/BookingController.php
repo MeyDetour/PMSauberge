@@ -6,6 +6,7 @@ use App\Entity\Booking;
 use App\Repository\BedRepository;
 use App\Repository\BookingRepository;
 use App\Repository\RoomRepository;
+use App\Service\GlobalService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,17 +23,13 @@ use Symfony\Component\Serializer\SerializerInterface;
 class BookingController extends AbstractController
 {
     public int $price = 50;
+    private $globalService;
 
-    public function __construct()
+    public function __construct(GlobalService $globalService)
     {
-
+        $this->globalService = $globalService;
     }
 
-    #[Route('/bookings', name: 'app_bookings')]
-    public function gets(BookingRepository $bookingRepository): Response
-    {
-        return $this->json($bookingRepository->findAll(), 200, [], ['groups' => ['entireBooking']]);
-    }
 
     #[Route('/booking/initaliaze', name: 'initaliaze_form_booking', methods: 'get')]
     public function initialize(BedRepository $bedRepository, RoomRepository $roomRepository): Response
@@ -183,28 +180,59 @@ class BookingController extends AbstractController
         return $this->json(["isThereBunkBed" => $isThereBunkBed], 200);
     }
 
-    #[Route('/bookings/get/all', name: 'all_booking', methods: 'get')]
-    public function getAll(BookingRepository $repository): Response
-    {
-        return $this->json($repository->findAll(), 200, [], ['groups' => ['entireBooking']]);
-    }
 
-    #[Route('/bookings/get/new', name: 'waiting_booking', methods: 'get')]
-    public function getAllWaiting(BookingRepository $repository): Response
-    {
-        return $this->json($repository->findBy(['advencement' => "waiting"]), 200, [], ['groups' => ['entireBooking']]);
-    }
 
-    #[Route('/bookings/get/progress', name: 'progress_booking', methods: 'get')]
-    public function getAllProgress(BookingRepository $repository): Response
-    {
-        return $this->json($repository->findBy(['advencement' => "progress"]), 200, [], ['groups' => ['entireBooking']]);
-    }
 
+    #[Route('/bookings/get/passed', name: 'app_bookings_passed', methods: "get")]
+    #[Route('/bookings/get/waiting', name: 'waiting_booking', methods: 'get')]
+    #[Route('/bookings/get/refund', name: 'refund_booking', methods: 'get')]
     #[Route('/bookings/get/done', name: 'done_booking', methods: 'get')]
-    public function getAllDone(BookingRepository $repository): Response
+    #[Route('/bookings/get/progress', name: 'progress_booking', methods: 'get')]
+    #[Route('/bookings', name: 'app_bookings',methods: "get")]
+    public function getBookingsWithConditions(BookingRepository $bookingRepository, Request $request, EntityManagerInterface $manager): Response
     {
-        return $this->json($repository->findBy(['advencement' => "done"]), 200, [], ['groups' => ['entireBooking']]);
+        $route = $request->attributes->get('_route');
+        $bookings = [];
+
+        switch ($route) {
+            case "app_bookings_passed":
+                $bookingsData = $bookingRepository->findAll();
+                foreach ($bookingsData as $booking) {
+                    if ($this->globalService->isBookingPassed($booking)) {
+                        $bookings[] = $booking;
+                    }
+                }
+                break;
+            case "waiting_booking":
+                $bookings = $bookingRepository->findBy(['advencement' => "waiting"]);
+                break;
+            case "refund_booking":
+                $bookings = $bookingRepository->findBy(['advencement' => "refund"]);
+                break;
+            case "progress_booking":
+                $bookings = $bookingRepository->findBy(['advencement' => "progress"]);
+                break;
+            case "done_booking":
+                $bookings = $bookingRepository->findBy(['advencement' => "done"]);
+                break;
+            case"app_bookings":
+                $bookingsData = $bookingRepository->findAll();
+                foreach ($bookingsData as $booking) {
+                    if (!$this->globalService->isBookingPassed($booking)) {
+                        $bookings[] = $booking;
+                    }
+                    else {
+                        $booking->setAdvencement("done");
+                        $manager->persist($booking);
+                    }
+
+
+                }
+                $manager->flush();
+                break;
+        }
+
+        return $this->json($bookings, 200, [], ['groups' => ['entireBooking']]);
     }
 
     #[Route('/booking/new', name: 'new_booking', methods: 'post')]
@@ -220,15 +248,20 @@ class BookingController extends AbstractController
         if ($booking->getPhoneNumber() == null) {
             return $this->json(["message" => "Enter an valid email.", 406]);
         }
-        if ($booking->getStartDate() >= $booking->getEndDate()) {
-            return $this->json(["message" => "start date must be inferior as end start date.", 406]);
+        // end date after start date
+        if ($booking->getEndDate() <= $booking->getStartDate()) {
+            return $this->json(["message" => "End date must be after start date"], 200);
+        } // start date after today)
+        else if ($booking->getStartDate() <= new \DateTime()) {
+            return $this->json(["message" => "Start date must be after today"], 200);
+        } // end date after today
+        else if ($booking->getEndDate() <= new \DateTime()) {
+            return $this->json(["message" => "End date must be after today"], 200);
         }
-        if ($booking->getWantPrivateRoom()!= true && $booking->getWantPrivateRoom()!= false) {
+        if ($booking->getWantPrivateRoom() != true && $booking->getWantPrivateRoom() != false) {
             return $this->json(["message" => "Client wants private room ?", 406]);
         }
 
-        /*   if (new \DateTime() >= $booking->getStartDate()) {
-               return $this->json(["message" => "Start date must be in the future", 406]);}*/
 
         $isThereMajor = false;
         $today = new Datetime();
@@ -270,6 +303,19 @@ class BookingController extends AbstractController
         }
         if ($bookingEdited->getEndDate() != null) {
             $booking->setEndDate($bookingEdited->getEndDate());
+        }
+        // end date after start date
+        if ($booking->getEndDate() <= $booking->getStartDate()) {
+            return $this->json(["message" => "End date must be after start date"], 200);
+        } // start date after today)
+        else if ($booking->getStartDate() <= new \DateTime()) {
+            return $this->json(["message" => "Start date must be after today"], 200);
+        } // end date after today
+        else if ($booking->getEndDate() <= new \DateTime()) {
+            return $this->json(["message" => "End date must be after today"], 200);
+        }
+        if ($booking->getWantPrivateRoom() != true && $booking->getWantPrivateRoom() != false) {
+            return $this->json(["message" => "Client wants private room ?", 406]);
         }
         if ($bookingEdited->getPhoneNumber() != null) {
 
@@ -337,6 +383,9 @@ class BookingController extends AbstractController
         $count = 0;
         $beds = [];
         foreach ($room->getBeds() as $bed) {
+            if ($this->globalService->isBedDeleted($bed)) {
+                break;
+            }
             if (count($bed->getBookings()) == 0) {
                 $count++;
                 if ($bed->isDoubleBed()) {
@@ -416,6 +465,9 @@ class BookingController extends AbstractController
 
                     $bedsfreeinthisroom = [];
                     foreach ($room->getBeds() as $bed) {
+                        if ($this->globalService->isBedDeleted($bed)) {
+                            break;
+                        }
                         $isBedFree = false;
                         foreach ($bed->getBookings() as $booking) {
                             $startDate = $booking->getEndDate();
@@ -427,7 +479,7 @@ class BookingController extends AbstractController
                                 $isBedFree = true;
                             }
                         }
-                        if(count($bed->getBookings())==0){
+                        if (count($bed->getBookings()) == 0) {
                             $isBedFree = true;
                         }
                         $bedsBoolean[] = $isBedFree;
@@ -435,7 +487,7 @@ class BookingController extends AbstractController
                             $bedsfreeinthisroom[] = $bed;
                         }
                     }
-                    if (!in_array(false,$bedsBoolean )) {
+                    if (!in_array(false, $bedsBoolean)) {
                         $beds = $bedsfreeinthisroom;
                     }
                 }

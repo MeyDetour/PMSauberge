@@ -4,10 +4,9 @@ body {
     width: 100vw;
     min-height: 100vh;
 
-    background: linear-gradient(0deg, #073259, #040721);
+    background: linear-gradient(180deg, #293042, #1d2333);
 
     color: #f7f7f7;
-    text-shadow: #ffffffe3 0px 0px 1px;
     font-family: monospace;
     font-size: 1.2em;
 }
@@ -22,7 +21,7 @@ body {
 }
 /*===============BASIC CLASS=============*/
 hr {
-    background: white;
+    background: #E5E49D;
     height: 1px;
     width: 100%;
 }
@@ -32,7 +31,7 @@ details{
 }
 summary{
     font-size: 2em;
-    color: #ade4ff;
+    color: #E5E49D;
     cursor: pointer;
 }
 pre {
@@ -51,11 +50,11 @@ pre {
 
 }
 kbd{
-    background: #13314b;
+
+    background: #333e59;
     padding: 7px 14px;
     box-sizing: border-box;
-    border-radius: 5px;
-    border: #184267 2px solid;
+    text-shadow: white 0 1px 1px;
     margin-inline: 25px;
 }
 /*=======================================*/
@@ -76,7 +75,7 @@ kbd{
 
 .routeContainer {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     flex-wrap: wrap;
     width: 100%;
@@ -84,21 +83,32 @@ kbd{
 
 .route {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: start;
-    width: 49%;
+    width: 100%;
     padding: 114px 60px;
     box-sizing: border-box;
 }
+.route .left, .route .right{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: 45%;
+    gap: 19px;
+}
+.routeName{
 
-.route .name {
+    color: #E5E49D;
+    font-weight: bold;
+    font-size: 1.5em;
+    text-transform: uppercase;
+
+}
+.routeLink{
     display: flex;
     flex-direction: row;
     align-items: center;
 
-    color: #ade4ff;
-    font-weight: bold;
-    font-size: 1.3em;
 }
 .route .json{
     position: absolute;
@@ -109,7 +119,6 @@ kbd{
 
 
     color: #756c6c;
-    text-shadow: #1a1a1a 0px 0px 10px;
 }
 .route .json {
 }

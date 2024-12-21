@@ -115,6 +115,9 @@ class RoomController extends AbstractController
     #[Route('/room/remove/{id}', name: 'remove_room', methods: ['DELETE'])]
     public function remove(Request $request, SerializerInterface $serializer, Room $room, RoomRepository $roomRepository, EntityManagerInterface $entityManager): Response
     {
+        if (count($room->getBeds())!=0){
+            return $this->json(["messsage" => "Room has beds associated"]);
+        }
         $entityManager->remove($room);
         $entityManager->flush();
         return $this->json(["messsage" => "ok"], 200, [], ['groups' => 'rooms']);

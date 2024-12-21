@@ -27,7 +27,7 @@ class Bed
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(['bed', 'rooms_and_bed', 'entireBooking'])]
     private ?string $state = null;
-    //blocked, cleaned, inspected, notcleaned
+    //blocked, cleaned, inspected, notcleaned, deleted
 
     #[ORM\ManyToOne(inversedBy: 'beds')]
     #[ORM\JoinColumn(nullable: false)]
@@ -70,7 +70,6 @@ class Bed
      * @var Collection<int, Booking>
      */
     #[ORM\ManyToMany(targetEntity: Booking::class, mappedBy: 'beds')]
-    #[Groups(['bed', 'rooms_and_bed'])]
     private Collection $bookings;
 
     #[ORM\Column]

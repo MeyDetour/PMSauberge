@@ -11,6 +11,7 @@ framework:
             datetime_format: 'd.m.Y H:i' # Format ISO 8601, mais tu peux en changer si besoin
     #esi: true
     #fragments: true
+    error_controller: 'App\Controller\ExceptionController::handleException'
 
 when@test:
     framework:

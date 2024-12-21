@@ -14,29 +14,37 @@
 
                         {% for route in AllRouteOfName %}
                             <div class="route">
-                            <span class="name">{{ route.name }} : {{ route.route }} <kbd
-                                        class="">{{ route.methode }}</kbd></span>
+                                <div class="left">
+                                    <span class="routeName">{{ route.name }}  </span>
+                                    <span class="routeLink"> {{ route.route }} <kbd
+                                                class="">{{ route.methode }}</kbd></span>
+                                    <p>{{ route.description }}</p>
+                                    <span class="">Authentication token ? {{ route.token ? "Yes":"No" }}</span>
 
-                                <div style="width: 100%; margin-block: 10px">
 
-                                    Body :
-                                    {% if route.body %}
-                                        <pre class=""><span
-                                                    class="json">Json</span>{{ route.body|json_encode(constant('JSON_PRETTY_PRINT')) }}   </pre>
-                                    {% else %}
-                                        No body
-
-                                    {% endif %}    </div>
-                                <div style="width: 100%; margin-block: 10px">
-                                    Data sent back :
-                                    {% if route.sendBack %}
-
-                                        <pre class=""><span
-                                                    class="json">Json</span>{{ route.sendBack|json_encode(constant('JSON_PRETTY_PRINT')) }}   </pre>
-                                    {% else %}No data sent back
-                                    {% endif %}
                                 </div>
-                                <span class="">Authentication token ? {{ route.token ? "Yes":"No" }}</span>
+                                <div class="right">
+                                    <div style="width: 100%; margin-block: 10px">
+
+                                        Body :
+                                        {% if route.body %}
+                                            <pre class=""><span
+                                                        class="json">Json</span>{{ route.body|json_encode(constant('JSON_PRETTY_PRINT')) }}   </pre>
+                                        {% else %}
+                                            No body
+
+                                        {% endif %}    </div>
+                                    <div style="width: 100%; margin-block: 10px">
+                                        Data sent back :
+                                        {% if route.sendBack %}
+
+                                            <pre class=""><span
+                                                        class="json">Json</span>{{ route.sendBack|json_encode(constant('JSON_PRETTY_PRINT')) }}   </pre>
+                                        {% else %}No data sent back
+                                        {% endif %}
+                                    </div>
+                                </div>
+
                             </div>
                         {% endfor %}
 
@@ -61,7 +69,6 @@
             let res = pre.innerHTML.replaceAll(`"int"`, "<span class='intColor'>int</span>")
             res = res.replaceAll(`"boolean"`, "<span class='booleanColor'>boolean</span>")
             res = res.replaceAll(`"string"`, "<span class='stringColor'>string</span>")
-
 
 
             pre.innerHTML = res

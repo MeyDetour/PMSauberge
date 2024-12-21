@@ -10,3 +10,7 @@ A **Property Management System (PMS)** designed specifically for youth hostels. 
 
 ### 🗂 Project Tracking
 The progress and task management are tracked using **YouTrack**.
+
+
+
+- to do : les bed doivent pas etre supprimé

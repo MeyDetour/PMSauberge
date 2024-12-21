@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class RegistrationController extends AbstractController
 {
-  /*  #[Route('/register', name: 'app_register',methods: ['POST'])]
+    #[Route('/register', name: 'app_register',methods: 'post')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, SerializerInterface $serializer, UserRepository $userRepository, SettingsRepository $settingsRepository): Response
     {
         $user = $serializer->deserialize($request->getContent(), User::class, 'json');
@@ -30,6 +30,7 @@ class RegistrationController extends AbstractController
         $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 
         $user->setCreatedAt(new \DateTimeImmutable());
+        $user->setActive(true);
         $entityManager->persist($user);
 
         if(count(   $settingsRepository->findAll() ) == 0){
@@ -43,7 +44,7 @@ class RegistrationController extends AbstractController
 
         $entityManager->flush();
 
-        return $this->json([$user], 409, [], ['groups' => ['user']]);
+        return $this->json([$user], 200, [], ['groups' => ['user']]);
 
-    }*/
+    }
 }

@@ -59,7 +59,7 @@ class UserController extends AbstractController
         return $this->json($user, 200, [], ['groups' => ['user']]);
     }
 
-    #[Route('/admin/user/new', name: 'new_user', methods: 'post')]
+    #[Route('/user/new', name: 'create_user', methods: 'post')]
     public function create(Request $request, SerializerInterface $serializer, UserRepository $userRepository ,EntityManagerInterface $entityManager): Response
     {
         if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
@@ -88,7 +88,8 @@ class UserController extends AbstractController
             return $this->json(["message" => "Please enter Phone Number"], 406);
         }
         $user->setCreatedAt(new \DateTimeImmutable());
-        $user->setPassword('$2y$13$FhkMbbE13NYUtjESrZ3WveSG9x4O0I23VSCJgGFv34skifd/iuu5G');
+        //default password = auberjeune
+        $user->setPassword('$2y$13$S1.n46J.zCZdGHylsAnnju9QTif0zN7sheYwQ9Q.z533PNaDABnAy');
         $user->setRoles(["ROLE_USER"]);
         $user->setActive(true);
         $entityManager->persist($user);

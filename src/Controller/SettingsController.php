@@ -22,7 +22,9 @@ class SettingsController extends AbstractController
 
     #[Route('/settings/edit', name: 'edit_settings', methods: 'PUT')]
     public function edit(SettingsRepository $repository, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer): Response
-    {
+    {   if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+        return $this->json(["message" => "You are not allowed to do this"], 405);
+    }
         $settingsEdited = $serializer->deserialize($request->getContent(), Settings::class, 'json');
         $settings = $repository->findAll()[0];
 

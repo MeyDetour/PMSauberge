@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\PseudoTypes\List_;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
 
@@ -124,12 +125,16 @@ class Room
         return $this;
     }
 
-    /**
-     * @return Collection<int, Bed>
-     */
-    public function getBeds(): Collection
+    public function getBeds(): array
     {
-        return $this->beds;
+        $beds = [];
+        foreach ($this->beds as $bed){
+            if ($bed->getState() !="deleted"){
+                $beds[]=$bed;
+            }
+        }
+
+        return $beds;
     }
 
     public function addBed(Bed $bed): static
