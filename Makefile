@@ -19,6 +19,7 @@ ip:
 
 
 ## -------- SYMFONY COMMAND --------
+
 compile :
 	$(SYMFONY_CONSOLE) asset-map:compile
 entity:
@@ -50,6 +51,11 @@ load-fixtures:
 	$(SYMFONY_CONSOLE) doctrine:fixtures:load
 install-fixtures:
 	$(COMPOSER) require --dev orm-fixtures
+reset:
+	$(MAKE) db-reload
+	$(MAKE) reload-migrations
+	$(MAKE) save
+	$(MAKE) load-fixtures
 
 
 ## -------- faker --------

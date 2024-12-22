@@ -18,11 +18,11 @@ class Room
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['rooms','rooms_and_bed'])]
+    #[Groups(['rooms','rooms_and_bed','entireBooking'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT,unique: true)]
-    #[Groups(['rooms','rooms_and_bed'])]
+    #[Groups(['rooms','rooms_and_bed','entireBooking'])]
     private ?string $name = null;
 
     #[ORM\Column]
@@ -222,11 +222,14 @@ class Room
     {
         $count = 0;
         foreach ($this->beds as $bed){
-            if($bed->isDoubleBed()){
-                $count += 2;
-            }else{
-                $count++;
+            if ($bed->getState()!="deleted"){
+                if($bed->isDoubleBed()){
+                    $count += 2;
+                }else{
+                    $count++;
+                }
             }
+
         }
         return $count;
     }

@@ -15,18 +15,19 @@ class Client
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['entireBooking','clients'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['entireBooking'])]
+    #[Groups(['entireBooking','clients'])]
     private ?string $firstName = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['entireBooking'])]
+    #[Groups(['entireBooking','clients'])]
     private ?string $lastName = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['entireBooking'])]
+    #[Groups(['entireBooking','clients'])]
     private ?\DateTimeInterface $birthDate = null;
 
     #[ORM\Column(type: Types::TEXT,nullable: True)]
@@ -36,11 +37,34 @@ class Client
      * @var Collection<int, Booking>
      */
     #[ORM\ManyToMany(targetEntity: Booking::class, inversedBy: 'clients')]
-    private Collection $booking;
+    #[Groups(['clients'])]
+    private Collection $bookings;
+
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'clients')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?self $invitedBy = null;
+
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'invitedBy')]
+    private Collection $clients;
+
+    /**
+     * @var Collection<int, Booking>
+     */
+    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'mainClient')]
+    #[Groups(['clients'])]
+    private Collection $bookingsAuthor;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $email = null;
 
     public function __construct()
     {
-        $this->booking = new ArrayCollection();
+        $this->bookings = new ArrayCollection();
+        $this->clients = new ArrayCollection();
+        $this->bookingsAuthor = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -99,15 +123,15 @@ class Client
     /**
      * @return Collection<int, Booking>
      */
-    public function getBooking(): Collection
+    public function getBookings(): Collection
     {
-        return $this->booking;
+        return $this->bookings;
     }
 
     public function addBooking(Booking $booking): static
     {
-        if (!$this->booking->contains($booking)) {
-            $this->booking->add($booking);
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings->add($booking);
         }
 
         return $this;
@@ -115,7 +139,69 @@ class Client
 
     public function removeBooking(Booking $booking): static
     {
-        $this->booking->removeElement($booking);
+        $this->bookings->removeElement($booking);
+
+        return $this;
+    }
+
+    public function getInvitedBy(): ?self
+    {
+        return $this->invitedBy;
+    }
+
+    public function setInvitedBy(?self $invitedBy): static
+    {
+        $this->invitedBy = $invitedBy;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getClients(): Collection
+    {
+        return $this->clients;
+    }
+
+    public function addClient(self $client): static
+    {
+        if (!$this->clients->contains($client)) {
+            $this->clients->add($client);
+            $client->setInvitedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClient(self $client): static
+    {
+        if ($this->clients->removeElement($client)) {
+            // set the owning side to null (unless already changed)
+            if ($client->getInvitedBy() === $this) {
+                $client->setInvitedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Booking>
+     */
+    public function getBookingsAuthor(): Collection
+    {
+        return $this->bookingsAuthor;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): static
+    {
+        $this->email = $email;
 
         return $this;
     }

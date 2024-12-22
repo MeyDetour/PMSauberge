@@ -31,7 +31,7 @@ class Bed
 
     #[ORM\ManyToOne(inversedBy: 'beds')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['rooms'])]
+    #[Groups(['rooms','entireBooking'])]
     private ?Room $room = null;
 
     #[ORM\Column(unique: true)]
@@ -74,6 +74,10 @@ class Bed
 
     #[ORM\Column]
     private ?bool $isOccupied = null;
+
+    #[ORM\ManyToOne(inversedBy: 'currentBookingInTheseBeds')]
+    #[Groups(['bed','rooms_and_bed'])]
+    private ?Booking $currentBooking = null;
 
     public function __construct()
     {
@@ -177,15 +181,9 @@ class Bed
     }
 
 
-    #[Groups(['bed','rooms_and_bed'])]
     public function getCurrentBooking()
     {
-        foreach ($this->bookings as $booking) {
-            if ($booking->getStartDate() <= new \DateTime() && new \DateTime() <= $booking->getEndDate()) {
-                return $booking;
-            }
-        }
-        return null;
+       return $this->currentBooking;
     }
 
     public function setBedShape(?string $bedShape): static
@@ -265,6 +263,13 @@ class Bed
     public function setOccupied(bool $isOccupied): static
     {
         $this->isOccupied = $isOccupied;
+
+        return $this;
+    }
+
+    public function setCurrentBooking(?Booking $currentBooking): static
+    {
+        $this->currentBooking = $currentBooking;
 
         return $this;
     }

@@ -452,13 +452,63 @@ class HomeController extends AbstractController
                     'token' => true
                 ], [
                     'name' => 'Toggle occupied state of bed ',
-                    'route' => '/bed/{id}/change/occupation',
+                    'route' => '/api/bed/{id}/change/occupation',
                     'description' => 'Marks a bed as "unoccupied" or "occupied".',
                     'methode' => 'PATCH',
                     'body' => [],
                     'sendBack' => "ok if it's done",
                     'token' => true
-                ],],
+                ],
+            ],
+            "Client" => [
+                [
+                    'name' => 'Get all clients',
+                    'route' => '/api/clients',
+                    'description' => 'Marks a bed as "unoccupied" or "occupied".',
+                    'methode' => 'PATCH',
+                    'body' => [],
+                    'sendBack' => [
+                        [
+                            "firstName" => "string", "lastName" => "string",
+                            "birthDate" => "d.m.Y H:i",
+                            "invitedBy" => "Client (NULL)",
+                            "bookings" => [
+                                [
+                                    "id" => 3,
+                                    "startDate" => "03.12.2025 12:00",
+                                    "endDate" => "05.12.2025 12:00",
+                                    "createdAt" => "1734877102",
+                                    "phoneNumber" => "string",
+                                    "mail" => "07 82 40 80 49",
+                                    "advencement" => "waiting/done/progress/refund"
+                                ]
+                            ]
+                        ],
+                        [
+                            "firstName" => "string", "lastName" => "string",
+                            "birthDate" => "d.m.Y H:i",
+                            "invitedBy" => [
+                                "firstName" => "string", "lastName" => "string",
+                                "birthDate" => "d.m.Y H:i",
+                                "invitedBy" => "Client (NULL)",
+                                "bookings" => [
+                                    [
+                                        "id" => 3,
+                                        "startDate" => "d.m.Y H:i",
+                                        "endDate" => "d.m.Y H:i",
+                                        "createdAt" => "d.m.Y H:i",
+                                        "phoneNumber" => "string",
+                                        "mail" => "string",
+                                        "advencement" => "waiting/done/progress/refund"
+                                    ]
+                                ]
+                            ],
+                            "bookings" => []
+                        ],
+                    ],
+                    'token' => true
+                ],
+            ],
 
 
             "Booking" => [
@@ -466,16 +516,17 @@ class HomeController extends AbstractController
                     'name' => 'Create booking',
                     'route' => '/api/bookinging/new',
 
-                    'description' => 'Creates a reservation.',    'methode' => 'POST',
+                    'description' => 'Creates a reservation.',
+                    'methode' => 'POST',
                     'body' => [
 
-                        "startDate" => "2022-12-03 12:00",
-                        "endDate" => "2023-12-05 12:00",
-                        "phoneNumber" => "07 82 40 50 80",
-                        "mail" => "07 82 40 80 49",
+                        "startDate" => "d.m.Y H:i",
+                        "endDate" => "d.m.Y H:i",
+                        "phoneNumber" => "string",
+                        "mail" => "string",
                         "clients" => [
-                            ["firstName" => "Mey", "lastName" => "DETOUR", "birthDate" => "2015-12-03 00:00"],
-                            ["firstName" => "Maxence", "lastName" => "Abrile", "birthDate" => "2002-12-03 00:00"]
+                            ["firstName" => "string", "lastName" => "string", "birthDate" => "d.m.Y 00:00"],
+                            ["firstName" => "string", "lastName" => "string", "birthDate" => "d.m.Y 00:00"]
                         ],
                         "wantPrivateRoom" => "boolean"
                     ],
@@ -484,19 +535,14 @@ class HomeController extends AbstractController
                 ], [
                     'name' => 'edit booking',
 
-                    'description' => 'Modifies a bed by updating all attributes.',   'route' => '/api/booking/edit/{id}',
+                    'description' => 'Modifies a bed by updating all attributes.', 'route' => '/api/booking/edit/{id}',
                     'methode' => 'PUT',
                     'body' => [
-                        "startDate" => "2022-12-03 12:00",
-                        "endDate" => "2023-12-05 12:00",
-                        "phoneNumber" => "07 82 40 50 80",
-                        "finished" => "boolean",
-                        "paid" => "boolean",
-                        "advencement" => "string",
-                        "clients" => [
-                            ["firstName" => "Mey", "lastName" => "DETOUR", "birthDate" => "2015-12-03 00:00"],
-                            ["firstName" => "Maxence", "lastName" => "Abrile", "birthDate" => "2002-12-03 00:00"]
-                        ],
+                        "startDate" => "d.m.Y H:i",
+                        "endDate" => "d.m.Y H:i",
+                        "phoneNumber" => "string",
+                        "mail" => "string",
+                        "wantPrivateRoom" => "boolean"
                     ],
                     'sendBack' => "booking",
                     'token' => true
@@ -539,7 +585,7 @@ class HomeController extends AbstractController
                         ]
                     ],
                     'token' => true
-                ],[
+                ], [
                     'name' => 'gat all passed bookings ',
                     'route' => '/api/bookings/passed',
                     'description' => 'Fetches all past reservations.',
@@ -572,7 +618,7 @@ class HomeController extends AbstractController
                     'token' => true
                 ], [
                     'name' => 'gat all waiting ',
-                     'route' => '/api/bookings/get/waiting',
+                    'route' => '/api/bookings/get/waiting',
                     'methode' => 'GET',
                     'body' => [],
                     'sendBack' => [

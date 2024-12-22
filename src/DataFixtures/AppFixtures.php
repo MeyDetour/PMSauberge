@@ -19,7 +19,7 @@ class AppFixtures extends Fixture
         // $manager->persist($produ
         $faker = \Faker\Factory::create();
         $user = new User();
-        $user->setEmail("mey");
+        $user->setEmail("mey@mey.com");
         $user->setFirstName("Mey");
         $user->setLastName("meymey");
         $user->setCreatedAt(new \DateTimeImmutable());

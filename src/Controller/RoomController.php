@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Room;
 use App\Repository\RoomRepository;
+use App\Service\GlobalService;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,32 +24,33 @@ class RoomController extends AbstractController
     }
 
     #[Route('/room/new', name: 'new_room', methods: ['POST'])]
-    public function new(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager , GlobalService $globalService): Response
     {
         $room = $serializer->deserialize($request->getContent(), Room::class, 'json');
-        if (!is_bool($room->hasLocker())) {
-            return $this->json(["message" => "Has the room a locker ?"], 406, [], ['groups' => 'rooms']);
+
+        if (!$globalService->isValidBool($room->hasLocker()) ) {
+            return $this->json(["message" => "Has the room a locker ? (field : hasLocker, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
-        if (!is_bool($room->hasPrivateShowerroom())) {
-            return $this->json(["message" => "Has the room a Showerroom ?"], 406, [], ['groups' => 'rooms']);
+        if (!$globalService->isValidBool($room->hasPrivateShowerroom())) {
+            return $this->json(["message" => "Has the room a private Showerroom ? (field : hasPrivateShowerroom, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
-        if (!is_bool($room->isPrivate())) {
-            return $this->json(["message" => "Is the room private ?"], 406, [], ['groups' => 'rooms']);
+        if (!$globalService->isValidBool($room->isPrivate())) {
+            return $this->json(["message" => "Is the room private ? (field : private, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
-        if (!is_bool($room->hasTable())) {
-            return $this->json(["message" => "Has the a table ?"], 406, [], ['groups' => 'rooms']);
+        if (!$globalService->isValidBool($room->hasTable())) {
+            return $this->json(["message" => "Has the a table ? (field : hasTable, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
-        if (!is_bool($room->hasBalcony())) {
-            return $this->json(["message" => "Has the room a balcony ?"], 406, [], ['groups' => 'rooms']);
+        if (!$globalService->isValidBool($room->hasBalcony())) {
+            return $this->json(["message" => "Has the room a balcony ? (field : hasBalcony, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
-        if (!is_bool($room->hasWashtub())) {
-            return $this->json(["message" => "Has the room a washtub ?"], 406, [], ['groups' => 'rooms']);
+        if (!$globalService->isValidBool($room->hasWashtub())) {
+            return $this->json(["message" => "Has the room a washtub ? (field : hasWashtub, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
-        if (!is_bool($room->hasBin())) {
-            return $this->json(["message" => "has the room a bin?"], 406, [], ['groups' => 'rooms']);
+        if (!$globalService->isValidBool($room->hasBin())) {
+            return $this->json(["message" => "has the room a bin? (field : hasBin, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
-        if (!is_bool($room->hasWardrobe())) {
-            return $this->json(["message" => "Has the room a wardrobe ?"], 406, [], ['groups' => 'rooms']);
+        if (!$globalService->isValidBool($room->hasWardrobe())) {
+            return $this->json(["message" => "Has the room a wardrobe ? (field : hasWardobe, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
 
 
@@ -63,34 +65,34 @@ class RoomController extends AbstractController
     }
 
     #[Route('/room/edit/{id}', name: 'edit_room', methods: ['PUT'])]
-    public function edit(Request $request, SerializerInterface $serializer, Room $room, RoomRepository $roomRepository, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, SerializerInterface $serializer, Room $room, RoomRepository $roomRepository, GlobalService $globalService,EntityManagerInterface $entityManager): Response
     {
 
         $room2 = $serializer->deserialize($request->getContent(), Room::class, 'json');
 
-        if (!is_bool($room2->hasLocker())) {
-            return $this->json(["message" => "Has the room a locker ?"], 406, [], ['groups' => 'rooms']);
+        if (!$globalService->isValidBool($room->hasLocker()) ) {
+            return $this->json(["message" => "Has the room a locker ? (field : hasLocker, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
-        if (!is_bool($room2->hasPrivateShowerroom())) {
-            return $this->json(["message" => "Has the room a Showerroom ?"], 406, [], ['groups' => 'rooms']);
+        if (!$globalService->isValidBool($room->hasPrivateShowerroom())) {
+            return $this->json(["message" => "Has the room a private Showerroom ? (field : hasPrivateShowerroom, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
-        if (!is_bool($room2->isPrivate())) {
-            return $this->json(["message" => "Is the room private ?"], 406, [], ['groups' => 'rooms']);
+        if (!$globalService->isValidBool($room->isPrivate())) {
+            return $this->json(["message" => "Is the room private ? (field : private, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
-        if (!is_bool($room->hasTable())) {
-            return $this->json(["message" => "Has the a table ?"], 406, [], ['groups' => 'rooms']);
+        if (!$globalService->isValidBool($room->hasTable())) {
+            return $this->json(["message" => "Has the a table ? (field : hasTable, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
-        if (!is_bool($room->hasBalcony())) {
-            return $this->json(["message" => "Has the room a balcony ?"], 406, [], ['groups' => 'rooms']);
+        if (!$globalService->isValidBool($room->hasBalcony())) {
+            return $this->json(["message" => "Has the room a balcony ? (field : hasBalcony, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
-        if (!is_bool($room->hasWashtub())) {
-            return $this->json(["message" => "Has the room a washtub ?"], 406, [], ['groups' => 'rooms']);
+        if (!$globalService->isValidBool($room->hasWashtub())) {
+            return $this->json(["message" => "Has the room a washtub ? (field : hasWashtub, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
-        if (!is_bool($room->hasBin())) {
-            return $this->json(["message" => "has the room a bin?"], 406, [], ['groups' => 'rooms']);
+        if (!$globalService->isValidBool($room->hasBin())) {
+            return $this->json(["message" => "has the room a bin? (field : hasBin, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
-        if (!is_bool($room->hasWardrobe())) {
-            return $this->json(["message" => "Has the room a wardrobe ?"], 406, [], ['groups' => 'rooms']);
+        if (!$globalService->isValidBool($room->hasWardrobe())) {
+            return $this->json(["message" => "Has the room a wardrobe ? (field : hasWardobe, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
         $room->setName($room2->getName());
         $room->setPrivate($room2->isPrivate());
@@ -106,7 +108,7 @@ class RoomController extends AbstractController
             $entityManager->persist($room);
             $entityManager->flush();
         } catch (UniqueConstraintViolationException $e) {
-            return $this->json(["message" => "This name already existe"], 406, [], ['groups' => 'rooms']);
+            return $this->json(["message" => "This name already existe"] ,400);
         }
 
         return $this->json([$room], 200, [], ['groups' => 'rooms']);

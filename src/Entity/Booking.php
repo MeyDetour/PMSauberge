@@ -20,28 +20,27 @@ class Booking
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['entireBooking','bed', 'rooms_and_bed'])]
+    #[Groups(['entireBooking', 'bed', 'clients','rooms_and_bed'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['entireBooking','bed', 'rooms_and_bed'])]
+    #[Groups(['entireBooking', 'bed', 'rooms_and_bed','clients'])]
     private ?\DateTimeInterface $startDate = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['entireBooking','bed', 'rooms_and_bed'])]
+    #[Groups(['entireBooking', 'bed', 'rooms_and_bed','clients'])]
     private ?\DateTimeInterface $endDate = null;
 
     #[ORM\Column]
-    #[Groups(['entireBooking'])]
-    #[Context([DateTimeNormalizer::FORMAT_KEY=>'U'])]
+    #[Groups(['entireBooking','clients'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['entireBooking','bed', 'rooms_and_bed'])]
+    #[Groups(['entireBooking', 'bed', 'rooms_and_bed','clients'])]
     private ?string $phoneNumber = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['entireBooking','bed', 'rooms_and_bed'])]
+    #[Groups(['entireBooking', 'bed', 'rooms_and_bed',"clients"])]
     private ?string $mail = null;
 
     #[ORM\Column]
@@ -64,23 +63,35 @@ class Booking
     private ?bool $isPaid = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['entireBooking'])]
+    #[Groups(['entireBooking','clients'])]
     private ?string $advencement = null;
     //refund,progress,done,waiting
 
     /**
      * @var Collection<int, Client>
      */
-    #[ORM\ManyToMany(targetEntity: Client::class, mappedBy: 'booking',cascade:['persist'])]
+    #[ORM\ManyToMany(targetEntity: Client::class, mappedBy: 'bookings',cascade: ['persist'])]
     #[Groups(['entireBooking'])]
     private Collection $clients;
 
     #[ORM\Column]
     private ?bool $wantPrivateRoom = null;
 
+    #[ORM\ManyToOne(inversedBy: 'bookings')]
+    #[ORM\JoinColumn(nullable: false)]  #[Groups(['entireBooking'])]
+    private ?Client $mainClient = null;
+
+    /**
+     * @var Collection<int, Bed>
+     */
+    #[ORM\OneToMany(targetEntity: Bed::class, mappedBy: 'currentBooking')]
+    private Collection $currentBookingInTheseBeds;
+
     public function __construct()
-    {    $this->beds = new ArrayCollection();
+    {
+        $this->beds = new ArrayCollection();
         $this->clients = new ArrayCollection();
+        $this->currentBookingInTheseBeds = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -90,7 +101,7 @@ class Booking
 
     public function getStartDate(): ?\DateTimeInterface
     {
-        return  $this->startDate;
+        return $this->startDate;
     }
 
     public function setStartDate(\DateTimeInterface $startDate): static
@@ -102,7 +113,7 @@ class Booking
 
     public function getEndDate(): ?\DateTimeInterface
     {
-        return  $this->endDate;
+        return $this->endDate;
     }
 
     public function setEndDate(\DateTimeInterface $endDate): static
@@ -247,14 +258,56 @@ class Booking
         return $this;
     }
 
-    public function getWantPrivateRoom(): ?string
+    public function getWantPrivateRoom(): ?bool
     {
         return $this->wantPrivateRoom;
     }
 
-    public function setWantPrivateRoom(string $wantPrivateRoom): static
+    public function setWantPrivateRoom(bool $wantPrivateRoom): static
     {
         $this->wantPrivateRoom = $wantPrivateRoom;
+
+        return $this;
+    }
+
+    public function getMainClient(): ?Client
+    {
+        return $this->mainClient;
+    }
+
+    public function setMainClient(?Client $mainClient): static
+    {
+        $this->mainClient = $mainClient;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Bed>
+     */
+    public function getCurrentBookingInTheseBeds(): Collection
+    {
+        return $this->currentBookingInTheseBeds;
+    }
+
+    public function addCurrentBookingInTheseBed(Bed $currentBookingInTheseBed): static
+    {
+        if (!$this->currentBookingInTheseBeds->contains($currentBookingInTheseBed)) {
+            $this->currentBookingInTheseBeds->add($currentBookingInTheseBed);
+            $currentBookingInTheseBed->setCurrentBooking($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCurrentBookingInTheseBed(Bed $currentBookingInTheseBed): static
+    {
+        if ($this->currentBookingInTheseBeds->removeElement($currentBookingInTheseBed)) {
+            // set the owning side to null (unless already changed)
+            if ($currentBookingInTheseBed->getCurrentBooking() === $this) {
+                $currentBookingInTheseBed->setCurrentBooking(null);
+            }
+        }
 
         return $this;
     }
