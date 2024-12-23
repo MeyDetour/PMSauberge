@@ -15,19 +15,19 @@ class Client
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['entireBooking','clients'])]
+    #[Groups(['entireBooking','clients',"client"])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['entireBooking','clients'])]
+    #[Groups(['entireBooking','clients',"client"])]
     private ?string $firstName = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['entireBooking','clients'])]
+    #[Groups(['entireBooking','clients',"client"])]
     private ?string $lastName = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['entireBooking','clients'])]
+    #[Groups(['entireBooking','clients',"client"])]
     private ?\DateTimeInterface $birthDate = null;
 
     #[ORM\Column(type: Types::TEXT,nullable: True)]
@@ -37,7 +37,7 @@ class Client
      * @var Collection<int, Booking>
      */
     #[ORM\ManyToMany(targetEntity: Booking::class, inversedBy: 'clients')]
-    #[Groups(['clients'])]
+    #[Groups(['client'])]
     private Collection $bookings;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'clients')]
@@ -54,10 +54,11 @@ class Client
      * @var Collection<int, Booking>
      */
     #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'mainClient')]
-    #[Groups(['clients'])]
+    #[Groups(['client'])]
     private Collection $bookingsAuthor;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['client','clients'])]
     private ?string $email = null;
 
     public function __construct()

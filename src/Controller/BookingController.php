@@ -32,7 +32,11 @@ class BookingController extends AbstractController
     {
         $this->globalService = $globalService;
     }
-
+    #[Route('/booking/{id}', name: 'get_booking', methods: "get")]
+    public function getBooking(Booking $booking ): Response
+    {
+        return $this->json($booking, 200, [], ['groups' => ['entireBooking']]);
+    }
 
     #[Route('/bookings/get/passed', name: 'app_bookings_passed', methods: "get")]
     #[Route('/bookings/get/waiting', name: 'waiting_booking', methods: 'get')]
@@ -40,7 +44,7 @@ class BookingController extends AbstractController
     #[Route('/bookings/get/done', name: 'done_booking', methods: 'get')]
     #[Route('/bookings/get/progress', name: 'progress_booking', methods: 'get')]
     #[Route('/bookings', name: 'app_bookings', methods: "get")]
-    public function getBookingsWithConditions(BookingRepository $bookingRepository, Request $request, EntityManagerInterface $manager): Response
+    public function getBookingsWithConditions(BookingRepository $bookingRepository,Request $request, EntityManagerInterface $manager): Response
     {
 
         $route = $request->attributes->get('_route');
@@ -75,7 +79,7 @@ class BookingController extends AbstractController
                 break;
         }
 
-        return $this->json($bookings, 200, [], ['groups' => ['entireBooking']]);
+        return $this->json($bookings, 200, [], ['groups' => ['bookings']]);
     }
 
     #[Route('/booking/new', name: 'new_booking', methods: 'post')]

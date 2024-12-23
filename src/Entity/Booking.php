@@ -20,31 +20,31 @@ class Booking
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['entireBooking', 'bed', 'clients','rooms_and_bed'])]
+    #[Groups(['entireBooking', 'bookings', 'bed', 'client', 'rooms_and_bed'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['entireBooking', 'bed', 'rooms_and_bed','clients'])]
+    #[Groups(['entireBooking', 'bookings', 'bed', 'rooms_and_bed', 'client'])]
     private ?\DateTimeInterface $startDate = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['entireBooking', 'bed', 'rooms_and_bed','clients'])]
+    #[Groups(['entireBooking', 'bookings', 'bed', 'rooms_and_bed', 'client'])]
     private ?\DateTimeInterface $endDate = null;
 
     #[ORM\Column]
-    #[Groups(['entireBooking','clients'])]
+    #[Groups(['entireBooking', 'bookings', 'client'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['entireBooking', 'bed', 'rooms_and_bed','clients'])]
+    #[Groups(['entireBooking', 'bookings', 'bed', 'rooms_and_bed', 'client'])]
     private ?string $phoneNumber = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['entireBooking', 'bed', 'rooms_and_bed',"clients"])]
+    #[Groups(['entireBooking', 'bookings', 'bed', 'rooms_and_bed', "clients"])]
     private ?string $mail = null;
 
     #[ORM\Column]
-    #[Groups(['entireBooking'])]
+    #[Groups(['entireBooking', 'bookings'])]
     private ?float $price = null;
 
     /**
@@ -55,22 +55,22 @@ class Booking
     private Collection $beds;
 
     #[ORM\Column]
-    #[Groups(['entireBooking'])]
+    #[Groups(['entireBooking', 'bookings'])]
     private ?bool $isFinished = null;
 
     #[ORM\Column]
-    #[Groups(['entireBooking'])]
+    #[Groups(['entireBooking', 'bookings'])]
     private ?bool $isPaid = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['entireBooking','clients'])]
+    #[Groups(['entireBooking', 'bookings', 'clients'])]
     private ?string $advencement = null;
     //refund,progress,done,waiting
 
     /**
      * @var Collection<int, Client>
      */
-    #[ORM\ManyToMany(targetEntity: Client::class, mappedBy: 'bookings',cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: Client::class, mappedBy: 'bookings', cascade: ['persist'])]
     #[Groups(['entireBooking'])]
     private Collection $clients;
 
@@ -78,7 +78,8 @@ class Booking
     private ?bool $wantPrivateRoom = null;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
-    #[ORM\JoinColumn(nullable: false)]  #[Groups(['entireBooking'])]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['entireBooking'])]
     private ?Client $mainClient = null;
 
     /**
@@ -310,5 +311,11 @@ class Booking
         }
 
         return $this;
+    }
+
+    #[Groups(['bookings'])]
+    public function getClientsNumber()
+    {
+        return count($this->clients) + 1;
     }
 }

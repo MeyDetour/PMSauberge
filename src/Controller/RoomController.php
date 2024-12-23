@@ -20,7 +20,11 @@ class RoomController extends AbstractController
     public function index(RoomRepository $roomRepository): Response
     {
         $rooms = $roomRepository->findBy([], ['name' => 'ASC']);
-        return $this->json($rooms, 200, [], ['groups' => ['rooms_and_bed']]);
+        return $this->json($rooms, 200, [], ['groups' => ['rooms']]);
+    }    #[Route('/room/{id}', name: 'get_room', methods: ['GET'])]
+    public function getRoom(Room $room): Response
+    {
+           return $this->json($room, 200, [], ['groups' => ['rooms_and_bed']]);
     }
 
     #[Route('/room/new', name: 'new_room', methods: ['POST'])]

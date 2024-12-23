@@ -84,6 +84,7 @@ kbd{
 .route {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     align-items: start;
     width: 100%;
     padding: 114px 60px;
