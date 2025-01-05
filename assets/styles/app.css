@@ -123,3 +123,35 @@ kbd{
 }
 .route .json {
 }
+
+
+@media  only screen and (max-width: 1000px) {
+    .container{
+
+        padding: 60px;
+    }
+    .route{
+
+        padding: 73px 10px;
+    }
+    .route .left,.route .right{
+        width: 48%;
+    }
+}
+
+@media  only screen and (max-width: 700px) {
+    .route{
+
+        flex-direction: column;
+    }
+    .route .left, .route .right {
+        width: 100%;
+    }
+}
+
+@media  only screen and (max-width: 500px) {
+    .container{
+
+        padding: 19px;
+    }
+}
