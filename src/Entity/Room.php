@@ -42,7 +42,7 @@ class Room
      * @var Collection<int, Bed>
      */
     #[ORM\OneToMany(targetEntity: Bed::class, mappedBy: 'room', orphanRemoval: true)]
-    #[Groups(['rooms_and_bed'])]
+    #[Groups(['rooms_and_bed','rooms'])]
     private Collection $beds;
 
     #[ORM\Column]
