@@ -2,9 +2,15 @@
 
 namespace App\Controller;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
+use Twig\Environment;
 
 class HomeController extends AbstractController
 {
@@ -87,7 +93,7 @@ class HomeController extends AbstractController
                     'route' => '/api/users',
                     'methode' => 'GET',
                     'body' => null,
-                    'sendBack' =>[
+                    'sendBack' => [
                         [
                             "id" => "int",
                             "email" => "string",
@@ -180,7 +186,15 @@ class HomeController extends AbstractController
                             "hasBalcony" => "boolean",
                             "hasWashtub" => "boolean",
                             "hasBin" => "boolean",
-                            "hasWardrobe" => "boolean"
+                            "hasWardrobe" => "boolean",
+                            "beds" => [
+                                [
+                                    "id" => "int (AI) (NOT NULL)",
+                                    "isOccupied" => "boolean",
+                                    "number" => "string"
+                                ], ["..."]
+
+                            ]
                         ], ['...']
                     ],
                     'token' => true
@@ -744,6 +758,37 @@ class HomeController extends AbstractController
         return $this->render("home/home.html.twig", [
 
         ]);
+    }
+
+    #[Route('/send-mail', name: 'app_test')]
+    public function test(MailerInterface $mailer, LoggerInterface $logger, Environment $twig): Response
+    {
+//        php bin/console messenger:consume async -vv
+
+        try {
+            $htmlContent = $twig->render('emails/registration_email.html.twig', [
+                'title' => 'Bienvenue sur notre site!',
+                'user_name' => 'Jean Dupont'
+            ]);
+
+            $email = (new Email())
+                ->from(new Address('meydetour-contact@zohomail.eu'))
+                ->to(new Address('meynever@gmail.com'))
+                ->subject('Bienvenue sur le site de Gaëlle Ghizoli !')
+                ->text('Sending emails is fun again!')
+                ->html($htmlContent);
+
+            $mailer->send($email);
+            return $this->render("home/test.html.twig", [
+
+            ]);
+
+        } catch (TransportExceptionInterface $e) {
+            // Log l'erreur pour diagnostic
+            $errorMessage = $e->getMessage();
+            dd($errorMessage);
+            return new Response('Erreur lors de l\'envoi : ' . $errorMessage, 500);
+        }
     }
 
 }

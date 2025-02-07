@@ -16,7 +16,7 @@ class Bed
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['bed', 'rooms_and_bed', 'entireBooking'])]
+    #[Groups(['bed', 'rooms_and_bed', 'entireBooking','rooms'])]
     private ?int $id = null;
 
 
@@ -31,12 +31,12 @@ class Bed
 
     #[ORM\ManyToOne(inversedBy: 'beds')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['rooms','entireBooking'])]
+    #[Groups(['entireBooking'])]
     private ?Room $room = null;
 
     #[ORM\Column(unique: true)]
-    #[Groups(['bed', 'rooms_and_bed', 'entireBooking'])]
-    private ?int $number = null;
+    #[Groups(['bed', 'rooms_and_bed', 'entireBooking','rooms'])]
+    private ?string $number = null;
 
     #[ORM\ManyToOne(inversedBy: 'bedsCleaned')]
     #[Groups(['bed'])]
@@ -73,6 +73,7 @@ class Bed
     private Collection $bookings;
 
     #[ORM\Column]
+    #[Groups(['rooms'])]
     private ?bool $isOccupied = null;
 
     #[ORM\ManyToOne(inversedBy: 'currentBookingInTheseBeds')]
@@ -127,12 +128,12 @@ class Bed
         return $this;
     }
 
-    public function getNumber(): ?int
+    public function getNumber(): ?string
     {
         return $this->number;
     }
 
-    public function setNumber(int $number): static
+    public function setNumber(string $number): static
     {
         $this->number = $number;
 
