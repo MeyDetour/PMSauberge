@@ -21,18 +21,20 @@ class RoomController extends AbstractController
     {
         $rooms = $roomRepository->findBy([], ['name' => 'ASC']);
         return $this->json($rooms, 200, [], ['groups' => ['rooms']]);
-    }    #[Route('/room/{id}', name: 'get_room', methods: ['GET'])]
+    }
+
+    #[Route('/room/{id}', name: 'get_room', methods: ['GET'])]
     public function getRoom(Room $room): Response
     {
-           return $this->json($room, 200, [], ['groups' => ['rooms_and_bed']]);
+        return $this->json($room, 200, [], ['groups' => ['rooms_and_bed']]);
     }
 
     #[Route('/room/new', name: 'new_room', methods: ['POST'])]
-    public function new(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager , GlobalService $globalService): Response
+    public function new(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, GlobalService $globalService): Response
     {
         $room = $serializer->deserialize($request->getContent(), Room::class, 'json');
 
-        if (!$globalService->isValidBool($room->hasLocker()) ) {
+        if (!$globalService->isValidBool($room->hasLocker())) {
             return $this->json(["message" => "Has the room a locker ? (field : hasLocker, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
         if (!$globalService->isValidBool($room->hasPrivateShowerroom())) {
@@ -69,12 +71,12 @@ class RoomController extends AbstractController
     }
 
     #[Route('/room/edit/{id}', name: 'edit_room', methods: ['PUT'])]
-    public function edit(Request $request, SerializerInterface $serializer, Room $room, RoomRepository $roomRepository, GlobalService $globalService,EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, SerializerInterface $serializer, Room $room, RoomRepository $roomRepository, GlobalService $globalService, EntityManagerInterface $entityManager): Response
     {
 
         $room2 = $serializer->deserialize($request->getContent(), Room::class, 'json');
 
-        if (!$globalService->isValidBool($room->hasLocker()) ) {
+        if (!$globalService->isValidBool($room->hasLocker())) {
             return $this->json(["message" => "Has the room a locker ? (field : hasLocker, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
         if (!$globalService->isValidBool($room->hasPrivateShowerroom())) {
@@ -112,7 +114,7 @@ class RoomController extends AbstractController
             $entityManager->persist($room);
             $entityManager->flush();
         } catch (UniqueConstraintViolationException $e) {
-            return $this->json(["message" => "This name already existe"] ,400);
+            return $this->json(["message" => "This name already existe"], 400);
         }
 
         return $this->json([$room], 200, [], ['groups' => 'rooms']);
@@ -121,7 +123,7 @@ class RoomController extends AbstractController
     #[Route('/room/remove/{id}', name: 'remove_room', methods: ['DELETE'])]
     public function remove(Request $request, SerializerInterface $serializer, Room $room, RoomRepository $roomRepository, EntityManagerInterface $entityManager): Response
     {
-        if (count($room->getBeds())!=0){
+        if (count($room->getBeds()) != 0) {
             return $this->json(["messsage" => "Room has beds associated"]);
         }
         $entityManager->remove($room);
