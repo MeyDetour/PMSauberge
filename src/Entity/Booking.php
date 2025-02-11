@@ -12,6 +12,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Context;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
@@ -56,10 +57,12 @@ class Booking
 
     #[ORM\Column]
     #[Groups(['entireBooking', 'bookings'])]
+    #[SerializedName('finished')]
     private ?bool $isFinished = null;
 
     #[ORM\Column]
     #[Groups(['entireBooking', 'bookings'])]
+    #[SerializedName('paied')]
     private ?bool $isPaid = null;
 
     #[ORM\Column(length: 255)]

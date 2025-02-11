@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\Ignore;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 
 #[ORM\Entity(repositoryClass: BedRepository::class)]
 class Bed
@@ -22,6 +23,7 @@ class Bed
 
     #[ORM\Column]
     #[Groups(['bed', 'rooms_and_bed'])]
+    #[SerializedName('sittingApart')]
     private ?bool $isSittingApart = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -48,6 +50,7 @@ class Bed
 
     #[ORM\Column]
     #[Groups(['bed', 'rooms_and_bed'])]
+    #[SerializedName('doubleBed')]
     private ?bool $isDoubleBed = null;
 
     #[ORM\Column(nullable: true)]
@@ -75,6 +78,7 @@ class Bed
 
     #[ORM\Column]
     #[Groups(['rooms'])]
+    #[SerializedName('occupied')]
     private ?bool $isOccupied = null;
 
     #[ORM\ManyToOne(inversedBy: 'currentBookingInTheseBeds')]
@@ -82,6 +86,7 @@ class Bed
     private ?Booking $currentBooking = null;
 
     #[ORM\Column(nullable: true)]
+    #[SerializedName('reservable')]
     private ?bool $isReservable = null;
 
     public function __construct()

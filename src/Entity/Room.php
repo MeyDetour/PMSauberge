@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use phpDocumentor\Reflection\PseudoTypes\List_;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 
 #[ORM\Entity(repositoryClass: RoomRepository::class)]
 #[UniqueEntity(fields: ['name'], message: 'There is already a room with this name.')]
@@ -36,6 +37,7 @@ class Room
 
     #[ORM\Column]
     #[Groups(['rooms','rooms_and_bed'])]
+    #[SerializedName('private')]
     private ?bool $isPrivate = null;
 
     /**

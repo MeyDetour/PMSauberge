@@ -180,7 +180,7 @@ class HomeController extends AbstractController
                             "name" => "string",
                             "hasPrivateShowerroom" => "boolean",
                             "hasLocker" => "boolean",
-                            "isPrivate" => "boolean",
+                            "private" => "boolean",
                             "bedsNumber" => 'int',
                             "hasTable" => "boolean",
                             "hasBalcony" => "boolean",
@@ -190,7 +190,7 @@ class HomeController extends AbstractController
                             "beds" => [
                                 [
                                     "id" => "int (AI) (NOT NULL)",
-                                    "isOccupied" => "boolean",
+                                    "occupied" => "boolean",
                                     "number" => "string"
                                 ], ["..."]
 
@@ -223,15 +223,15 @@ class HomeController extends AbstractController
                             "name" => "string",
                             "hasPrivateShowerroom" => "boolean",
                             "hasLocker" => "boolean",
-                            "isPrivate" => "boolean",
+                            "private" => "boolean",
                             "bedsNumber" => 'int',
                             "beds" => [
                                 [
                                     "id" => "int (AI) (NOT NULL)",
-                                    "isSittingApart" => "boolean",
+                                    "sittingApart" => "boolean",
                                     "state" => "blocked/cleaned/inspected/notcleaned",
                                     "number" => 0,
-                                    "isDoubleBed" => "boolean",
+                                    "doubleBed" => "boolean",
                                     "bedShape" => "singleBed",
                                     "hasLamp" => "boolean",
                                     "hasLittleStorage" => "boolean",
@@ -303,10 +303,10 @@ class HomeController extends AbstractController
                     'body' => null,
                     'sendBack' => [
                         "bed" => ["id" => 13,
-                            "isSittingApart" => "boolean",
+                            "sittingApart" => "boolean",
                             "state" => "string",
                             "number" => "int",
-                            "isDoubleBed" => "int",
+                            "doubleBed" => "int",
                             "occupied" => "boolean",
                             "bedShape" => "string",
                             "hasLamp" => "boolean",
@@ -330,7 +330,7 @@ class HomeController extends AbstractController
                                 "hasWashtub" => "boolean",
                                 "hasBin" => "boolean",
                                 "hasWardrobe" => "boolean",
-                                "isPrivate" => "boolean",
+                                "private" => "boolean",
 
                             ]],
                         "bookings" => [
@@ -383,10 +383,10 @@ class HomeController extends AbstractController
                     ],
                     'sendBack' => [
                         "id" => 13,
-                        "isSittingApart" => "boolean",
+                        "sittingApart" => "boolean",
                         "state" => "string",
                         "number" => "int",
-                        "isDoubleBed" => "int",
+                        "doubleBed" => "int",
                         "occupied" => "boolean",
                         "bedShape" => "string",
                         "hasLamp" => "boolean",
@@ -410,7 +410,7 @@ class HomeController extends AbstractController
                             "hasWashtub" => "boolean",
                             "hasBin" => "boolean",
                             "hasWardrobe" => "boolean",
-                            "isPrivate" => "boolean",
+                            "private" => "boolean",
 
                         ]
                     ],
@@ -440,10 +440,10 @@ class HomeController extends AbstractController
                     'body' => null,
                     'sendBack' => [
                         "id" => 13,
-                        "isSittingApart" => "boolean",
+                        "sittingApart" => "boolean",
                         "state" => "string",
                         "number" => "int",
-                        "isDoubleBed" => "int",
+                        "doubleBed" => "int",
                         "occupied" => "boolean",
                         "bedShape" => "string",
                         "hasLamp" => "boolean",
@@ -467,7 +467,7 @@ class HomeController extends AbstractController
                             "hasWashtub" => "boolean",
                             "hasBin" => "boolean",
                             "hasWardrobe" => "boolean",
-                            "isPrivate" => "boolean",
+                            "private" => "boolean",
 
                         ]
                     ],
@@ -644,8 +644,8 @@ class HomeController extends AbstractController
                         "phoneNumber" => "string",
                         "mail" => "string",
                         "price" => "int",
-                        "isFinished" => "boolean",
-                        "isPaid" => "boolean",
+                        "finished" => "boolean",
+                        "paid" => "boolean",
                         "advencement" => "string",
                         "clientsNumber" => "int"
                     ],
@@ -664,8 +664,8 @@ class HomeController extends AbstractController
                         "phoneNumber" => "string",
                         "mail" => "string",
                         "price" => "int",
-                        "isFinished" => "boolean",
-                        "isPaid" => "boolean",
+                        "finished" => "boolean",
+                        "paid" => "boolean",
                         "beds" => [
                             ["id" => 'int (AI) ',
                                 "state" => "inspected/cleaned/blocked/notcleaned/deleted",
@@ -708,8 +708,8 @@ class HomeController extends AbstractController
                         "phoneNumber" => "string",
                         "mail" => "string",
                         "price" => "int",
-                        "isFinished" => "boolean",
-                        "isPaid" => "boolean",
+                        "finished" => "boolean",
+                        "paid" => "boolean",
                         "advencement" => "string",
                         "clientsNumber" => "int"
                     ],
@@ -728,8 +728,8 @@ class HomeController extends AbstractController
                         "phoneNumber" => "string",
                         "mail" => "string",
                         "price" => "int",
-                        "isFinished" => "boolean",
-                        "isPaid" => "boolean",
+                        "finished" => "boolean",
+                        "paid" => "boolean",
                         "advencement" => "string",
                         "clientsNumber" => "int"
                     ],
@@ -748,8 +748,8 @@ class HomeController extends AbstractController
                         "phoneNumber" => "string",
                         "mail" => "string",
                         "price" => "int",
-                        "isFinished" => "boolean",
-                        "isPaid" => "boolean",
+                        "finished" => "boolean",
+                        "paid" => "boolean",
                         "advencement" => "string",
                         "clientsNumber" => "int"
                     ],
@@ -767,8 +767,8 @@ class HomeController extends AbstractController
                         "phoneNumber" => "string",
                         "mail" => "string",
                         "price" => "int",
-                        "isFinished" => "boolean",
-                        "isPaid" => "boolean",
+                        "finished" => "boolean",
+                        "paid" => "boolean",
                         "advencement" => "string",
                         "clientsNumber" => "int"
                     ],
