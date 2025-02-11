@@ -47,6 +47,18 @@ class BookingController extends AbstractController
         $totalBedNumber = count($bedRepository->findBy(["isReservable" => true]));
         $totalPrivateRoom = count($roomRepository->findBy(["isPrivate" => true]));
 
+        if ($totalBedNumber){
+
+            return $this->json([
+                "clientsToCome" => 0,
+                "clientsDeparture" => 0,
+                "globalFillingPercentage" =>0,
+                "privateRoomFillingPercentage" => 0,
+                "morningFillingPercentage" => 0,
+                "nightFillingPercentage" =>  0,
+            ], 200);
+        }
+
         $today = new DateTime();
         $halfJourney = $today->format("d.m.Y 12:00");
         $todayFirstHour = $today->format("d.m.Y 00:01");
