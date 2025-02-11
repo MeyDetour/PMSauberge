@@ -40,7 +40,7 @@ class BookingController extends AbstractController
         return $this->json($booking, 200, [], ['groups' => ['entireBooking']]);
     }
 
-    #[Route('/bookings/state', name: 'booking_state', methods: 'patch')]
+    #[Route('/bookings/state', name: 'booking_state', methods: 'get')]
     public function getBookingState(BedRepository $bedRepository, RoomRepository $roomRepository, BookingRepository $bookingRepository, EntityManagerInterface $manager): Response
     {
 
