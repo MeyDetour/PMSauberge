@@ -47,7 +47,7 @@ class BookingController extends AbstractController
         $totalBedNumber = count($bedRepository->findBy(["isReservable" => true]));
         $totalPrivateRoom = count($roomRepository->findBy(["isPrivate" => true]));
 
-        if ($totalBedNumber){
+        if ($totalBedNumber == 0){
 
             return $this->json([
                 "clientsToCome" => 0,
