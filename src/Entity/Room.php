@@ -18,11 +18,11 @@ class Room
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['rooms','rooms_and_bed','entireBooking'])]
+    #[Groups(['rooms','rooms_names','rooms_and_bed','entireBooking'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT,unique: true)]
-    #[Groups(['rooms','rooms_and_bed','entireBooking'])]
+    #[Groups(['rooms','rooms_names','rooms_and_bed','entireBooking'])]
     private ?string $name = null;
 
     #[ORM\Column]

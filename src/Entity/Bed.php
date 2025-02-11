@@ -70,6 +70,7 @@ class Bed
      * @var Collection<int, Booking>
      */
     #[ORM\ManyToMany(targetEntity: Booking::class, mappedBy: 'beds')]
+    #[ORM\OrderBy(["startDate"=>"ASC"])]
     private Collection $bookings;
 
     #[ORM\Column]
