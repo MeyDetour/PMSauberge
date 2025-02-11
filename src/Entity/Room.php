@@ -43,7 +43,7 @@ class Room
      */
     #[ORM\OneToMany(targetEntity: Bed::class, mappedBy: 'room', orphanRemoval: true)]
     #[Groups(['rooms_and_bed','rooms'])]
-    #[ORM\OrderBy(["number"=>"asc"])]
+    #[ORM\OrderBy(["number"=>"ASC"])]
     private Collection $beds;
 
     #[ORM\Column]
