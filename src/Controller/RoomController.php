@@ -21,7 +21,9 @@ class RoomController extends AbstractController
     {
         $rooms = $roomRepository->findBy([], ['name' => 'ASC']);
         return $this->json($rooms, 200, [], ['groups' => ['rooms']]);
-    }    #[Route('/room/names', name: 'app_rooms_name', methods: ['GET'])]
+    }
+
+    #[Route('/rooms/names', name: 'app_rooms_name', methods: ['GET'])]
     public function roomsName(RoomRepository $roomRepository): Response
     {
         $rooms = $roomRepository->findBy([], ['name' => 'ASC']);
