@@ -21,6 +21,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizableInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Constraints\Date;
 
 #[Route('/api')]
 class BookingController extends AbstractController
@@ -32,10 +33,97 @@ class BookingController extends AbstractController
     {
         $this->globalService = $globalService;
     }
+
     #[Route('/booking/{id}', name: 'get_booking', methods: "get")]
-    public function getBooking(Booking $booking ): Response
+    public function getBooking(Booking $booking): Response
     {
         return $this->json($booking, 200, [], ['groups' => ['entireBooking']]);
+    }
+
+    #[Route('/bookings/state', name: 'booking_state', methods: 'patch')]
+    public function getBookingState(BedRepository $bedRepository, RoomRepository $roomRepository, BookingRepository $bookingRepository, EntityManagerInterface $manager): Response
+    {
+
+        $totalBedNumber = count($bedRepository->findBy(["isReservable" => true]));
+        $totalPrivateRoom = count($roomRepository->findBy(["isPrivate" => true]));
+
+        $today = new DateTime();
+        $halfJourney = $today->format("d.m.Y 12:00");
+        $todayFirstHour = $today->format("d.m.Y 00:01");
+        $todayLastHour = $today->format("d.m.Y 23:59");
+        $today = $today->format("d.m.Y");
+
+
+        $bookings = $bookingRepository->findAll();
+
+
+        $globalFilling = 0;
+        $clientToCome = 0;
+        $clientDeparture = 0;
+        $privateRoomOccupied = 0;
+        $fillingInMorning = 0;
+        $fillingInNight = 0;
+
+
+        foreach ($bookings as $booking) {
+
+            // Global filling
+            if (
+                ($booking->getStartDate() <= $today && $today <= $booking->getEndDate() && !$booking->isFinished()) ||
+                $todayFirstHour < $booking->getEndDate() && $booking->getEndDate() < $halfJourney ||
+                $todayFirstHour < $booking->getStartDate() && $booking->getStartDate() < $halfJourney ||
+                $halfJourney > $booking->getEndDate() && $booking->getEndDate() > $todayLastHour ||
+                $halfJourney > $booking->getStartDate() && $booking->getEndDate() > $todayLastHour
+            ) {
+                $globalFilling += $booking->getBedsCount();
+
+                //private room
+                foreach ($booking->getBeds() as $bed) {
+                    if ($bed->getRoom()->isPrivate()) {
+                        $privateRoomOccupied++;
+                    }
+                }
+            }
+
+            //fillingInMorning
+            if (
+                $todayFirstHour < $booking->getEndDate() && $booking->getEndDate() < $halfJourney ||
+                $todayFirstHour < $booking->getStartDate() && $booking->getStartDate() < $halfJourney
+            ) {
+                $fillingInMorning += $booking->getBedsCount();
+            }
+
+
+            //filling in night
+            if (
+                $halfJourney > $booking->getEndDate() && $booking->getEndDate() > $todayLastHour ||
+                $halfJourney > $booking->getStartDate() && $booking->getEndDate() > $todayLastHour
+            ) {
+                $fillingInNight+= $booking->getBedsCount();
+            }
+
+            // Client to come
+            if ($booking->getStartDate() /*it's datetime*/ == $today) {
+                $clientToCome += $booking->getClientsNumber();
+            }
+
+            // Departure
+            if ($booking->getEndDate() /*it's datetime*/ == $today) {
+                $clientDeparture += $booking->getClientsNumber();
+            }
+
+
+        }
+
+
+        return $this->json([
+            "clientsToCome" => $clientToCome,
+            "clientsDeparture" => $clientDeparture,
+            "globalFillingPercentage" => round($globalFilling / $totalBedNumber),
+            "privateRoomFillingPercentage" => round($privateRoomOccupied/$totalPrivateRoom),
+            "morningFillingPercentage" => round($fillingInMorning/$totalBedNumber),
+            "nightFillingPercentage" => round($fillingInNight/$totalBedNumber),
+        ], 200);
     }
 
     #[Route('/bookings/get/passed', name: 'app_bookings_passed', methods: "get")]
@@ -44,7 +132,7 @@ class BookingController extends AbstractController
     #[Route('/bookings/get/done', name: 'done_booking', methods: 'get')]
     #[Route('/bookings/get/progress', name: 'progress_booking', methods: 'get')]
     #[Route('/bookings', name: 'app_bookings', methods: "get")]
-    public function getBookingsWithConditions(BookingRepository $bookingRepository,Request $request, EntityManagerInterface $manager): Response
+    public function getBookingsWithConditions(BookingRepository $bookingRepository, Request $request, EntityManagerInterface $manager): Response
     {
 
         $route = $request->attributes->get('_route');
@@ -124,7 +212,7 @@ class BookingController extends AbstractController
         }
         $message = $this->globalService->isStartDateAndEndDateConform($booking->getStartDate(), $booking->getEndDate());
         if ($message != "ok") {
-            return $this->json(["message" => $message, ],406);
+            return $this->json(["message" => $message,], 406);
 
         }
         if (!$this->globalService->isValidBool($booking->getWantPrivateRoom())) {
@@ -136,7 +224,7 @@ class BookingController extends AbstractController
 
         $age = $today->diff($booking->getMainClient()->getBirthDate())->y;
         if (18 > $age) {
-            return $this->json(["message" => "Main client must be major ? (field : mainClient, value : {firstName,lastName,birthDate} ", ],406);
+            return $this->json(["message" => "Main client must be major ? (field : mainClient, value : {firstName,lastName,birthDate} ",], 406);
         }
         $booking->getMainClient()->setEmail($booking->getMail());
         $manager->persist($booking->getMainClient());
@@ -174,7 +262,7 @@ class BookingController extends AbstractController
         $beds = $this->correspondingBeds($roomRepository, $booking, $booking->getWantPrivateRoom(), $isBookingForToday);
 
         if (count($beds) == 0) {
-            return $this->json(["message" => "There is no place for your group criters", ],406);
+            return $this->json(["message" => "There is no place for your group criters",], 406);
         }
         foreach ($beds as $bed) {
             $booking->addBed($bed);
@@ -199,10 +287,10 @@ class BookingController extends AbstractController
         $bookingEdited = $serializer->deserialize($request->getContent(), Booking::class, 'json');
 
         if (!$this->globalService->isValidString($bookingEdited->getMail())) {
-            return $this->json(["message" => "Enter an valid email. (field : mail, accepted : string)", ],406);
+            return $this->json(["message" => "Enter an valid email. (field : mail, accepted : string)",], 406);
         }
         if (!$this->globalService->isValidString($bookingEdited->getPhoneNumber())) {
-            return $this->json(["message" => "Enter a valid phone number. (field : phoneNumber, accepted : string)", ],406);
+            return $this->json(["message" => "Enter a valid phone number. (field : phoneNumber, accepted : string)",], 406);
         }
         if ($bookingEdited->getStartDate() == null) {
             return $this->json(["message" => "Enter a valid start date. (field : startDate, accepted : d.m.Y H:i )"], 406);
@@ -212,10 +300,10 @@ class BookingController extends AbstractController
         }
         $message = $this->globalService->isStartDateAndEndDateConform($bookingEdited->getStartDate(), $bookingEdited->getEndDate());
         if ($message != "ok") {
-            return $this->json(["message" => $message, ],406);
+            return $this->json(["message" => $message,], 406);
         }
         if (!$this->globalService->isValidBool($bookingEdited->getWantPrivateRoom())) {
-            return $this->json(["message" => "Client wants private room ? (field : wantPrivateRoom, value :true,false)", ],406);
+            return $this->json(["message" => "Client wants private room ? (field : wantPrivateRoom, value :true,false)",], 406);
         }
 
         $needToChangeBeds = false;
@@ -425,7 +513,7 @@ class BookingController extends AbstractController
             //we dont need to assert if bed is deleted because getBeds exclude already deleted bed
 
             //if bed has no bookings bed is free
-            if (count($bed->getBookings()) == 0) {
+            if (count($bed->getBookings()) == 0 && $bed->isReservable()) {
                 $isBedFree = true;
             } else {
                 $isBedFree = $this->bedFreeAtThisDate($bed, $startDateOfBooking, $endDateOfBooking, $bookingId);
@@ -457,6 +545,9 @@ class BookingController extends AbstractController
 
     public function bedFreeAtThisDate($bed, $startDateOfBooking, $endDateOfBooking, $bookingId)
     {
+        if (!$bed->isReservable()) {
+            return false;
+        }
 
         foreach ($bed->getBookings() as $booking) {
             if ($booking->getId() == $bookingId) {

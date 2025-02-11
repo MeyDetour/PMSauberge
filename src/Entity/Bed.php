@@ -80,6 +80,9 @@ class Bed
     #[Groups(['bed','rooms_and_bed'])]
     private ?Booking $currentBooking = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isReservable = null;
+
     public function __construct()
     {
         $this->bookings = new ArrayCollection();
@@ -271,6 +274,18 @@ class Bed
     public function setCurrentBooking(?Booking $currentBooking): static
     {
         $this->currentBooking = $currentBooking;
+
+        return $this;
+    }
+
+    public function isReservable(): ?bool
+    {
+        return $this->isReservable;
+    }
+
+    public function setReservable(?bool $isReservable): static
+    {
+        $this->isReservable = $isReservable;
 
         return $this;
     }

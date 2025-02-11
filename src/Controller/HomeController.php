@@ -419,7 +419,7 @@ class HomeController extends AbstractController
                     'body' => null,
                     'sendBack' => "ok",
                     'token' => true
-                ], [
+                ],[
                     'description' => 'Fetches all beds marked as deleted and restores them with a specific request.',
                     'name' => 'Get all deleted beds',
                     'route' => '/api/beds/deleted',
@@ -556,6 +556,23 @@ class HomeController extends AbstractController
 
 
             "Booking" => [
+                 [
+                    'name' => 'Filling of beds based on booking',
+
+                    'description' => 'Get all filling percentage of bed and number of client wich come',
+                    'route' => '/api/bookings/state',
+                    'methode' => 'GET',
+                    'body' => null,
+                    'sendBack' => [
+                        "clientsToCome" => "int",
+                        "clientsDeparture" => "int",
+                        "globalFillingPercentage" => "int",
+                        "privateRoomFillingPercentage" => "int",
+                        "morningFillingPercentage" => "int",
+                        "nightFillingPercentage" => "int",
+                    ],
+                    'token' => true
+                ],
                 [
                     'name' => 'Create booking',
                     'route' => '/api/bookinging/new',

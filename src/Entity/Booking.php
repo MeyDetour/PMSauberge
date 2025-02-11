@@ -78,7 +78,7 @@ class Booking
     private ?bool $wantPrivateRoom = null;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
-    #[ORM\JoinColumn(nullable: false)]
+        #[ORM\JoinColumn(nullable: false)]
     #[Groups(['entireBooking'])]
     private ?Client $mainClient = null;
 
@@ -178,6 +178,10 @@ class Booking
     public function getBeds(): Collection
     {
         return $this->beds;
+    }
+    public function getBedsCount(): int
+    {
+        return count($this->beds);
     }
 
     public function addBed(Bed $bed): static

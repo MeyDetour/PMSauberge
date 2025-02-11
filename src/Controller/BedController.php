@@ -61,6 +61,9 @@ class BedController extends AbstractController
         if ( !$globalService->isValidBool($bed->hasLittleStorage()) ) {
             return $this->json(["message" => "Is there little storage ? (field : hasLittleStorage, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
+        if ( !$globalService->isValidBool($bed->isReservable()) ) {
+            return $this->json(["message" => "Is bed reservable ?  (field : reservable, accepted : true,false) "], 406, [], ['groups' => 'rooms']);
+        }
         if ( !$globalService->isValidBool($bed->hasShelf())) {
             return $this->json(["message" => "Is there shelf storage ? (field : hasShelf, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
@@ -113,6 +116,9 @@ class BedController extends AbstractController
         }
         if ( !$globalService->isValidBool($editedBed->hasLamp()) ) {
             return $this->json(["message" => "Is there bedlight ?  (field : hasLamp, accepted : true,false) "], 406, [], ['groups' => 'rooms']);
+        }
+        if ( !$globalService->isValidBool($editedBed->isReservable()) ) {
+            return $this->json(["message" => "Is bed reservable ?  (field : reservable, accepted : true,false) "], 406, [], ['groups' => 'rooms']);
         }
         if ( !$globalService->isValidBool($editedBed->hasLittleStorage()) ) {
             return $this->json(["message" => "Is there little storage ? (field : hasLittleStorage, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
