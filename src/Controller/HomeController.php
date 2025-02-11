@@ -198,6 +198,19 @@ class HomeController extends AbstractController
                         ], ['...']
                     ],
                     'token' => true
+                ],[
+                    'name' => 'Get Rooms Names',
+                    'description' => 'Returns a list of rooms with their names without details',
+                    'route' => '/api/rooms/names',
+                    'methode' => 'GET',
+                    'body' => null,
+                    'sendBack' => [
+                        [
+                            "id" => "int (AI) (NOT NULL)",
+                            "name" => "string",
+                        ], ['...']
+                    ],
+                    'token' => true
                 ], [
                     'name' => 'Get Room',
                     'description' => 'Returns a room, their associated beds, and any ongoing reservations linked to those beds. Also provides key metrics like the total number of beds in each room.',
