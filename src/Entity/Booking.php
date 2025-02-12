@@ -320,7 +320,7 @@ class Booking
         return $this;
     }
 
-    #[Groups(['bookings'])]
+    #[Groups(['bookings','bed'])]
     public function getClientsNumber()
     {
         return count($this->clients) + 1;
