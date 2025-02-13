@@ -69,7 +69,7 @@ class BedController extends AbstractController
         }
 
         $data = json_decode($request->getContent(), true);
-        $roomId = $data['room'] ?? null;
+        $roomId = $data['roomId'] ?? null;
 
         if (!$roomId) {
             return $this->json(["message" => "Room ID is required"], 400);
@@ -137,7 +137,7 @@ class BedController extends AbstractController
 
         #associate room
         $data = json_decode($request->getContent(), true);
-        $roomId = $data['room'] ?? null;
+        $roomId = $data['roomId'] ?? null;
 
         if (!$roomId) {
             return $this->json(["message" => "Room ID is required"], 400);

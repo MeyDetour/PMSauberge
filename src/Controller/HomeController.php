@@ -198,7 +198,7 @@ class HomeController extends AbstractController
                         ], ['...']
                     ],
                     'token' => true
-                ],[
+                ], [
                     'name' => 'Get Rooms Names',
                     'description' => 'Returns a list of rooms with their names without details',
                     'route' => '/api/rooms/names',
@@ -320,19 +320,8 @@ class HomeController extends AbstractController
                                 "id" => "int",
                                 "email" => "string",
                             ],
-                            "room" => [
-                                "id" => 6,
-                                "name" => "room1",
-                                "hasPrivateShowerroom" => "boolean",
-                                "hasLocker" => "boolean",
-                                "hasTable" => "boolean",
-                                "hasBalcony" => "boolean",
-                                "hasWashtub" => "boolean",
-                                "hasBin" => "boolean",
-                                "hasWardrobe" => "boolean",
-                                "private" => "boolean",
-
-                            ]],
+                            "roomId" => "int",
+                        ],
                         "bookings" => [
 
                             "id" => "int (AI) (NOT NULL)",
@@ -359,8 +348,8 @@ class HomeController extends AbstractController
                         "bedShape" => "topBed,bottomBed,singleBed",
                         "sittingApart" => "boolean",
                         "state" => "cleaned,inspected,notCleaned,blocked",
-                        "room" => "int",
-                        "bookings" => []
+
+                        "roomId" => "int",
                     ],
                     'sendBack' => ['message' => "ok"],
                     'token' => true
@@ -379,7 +368,8 @@ class HomeController extends AbstractController
                         "hasShelf" => "boolean",
                         "bedShape" => "topBed,bottomBed,singleBed",
                         "sittingApart" => "boolean",
-                        "room" => "int"
+
+                        "roomId" => "int",
                     ],
                     'sendBack' => [
                         "id" => 13,
@@ -432,7 +422,7 @@ class HomeController extends AbstractController
                     'body' => null,
                     'sendBack' => "ok",
                     'token' => true
-                ],[
+                ], [
                     'description' => 'Fetches all beds marked as deleted and restores them with a specific request.',
                     'name' => 'Get all deleted beds',
                     'route' => '/api/beds/deleted',
@@ -569,7 +559,7 @@ class HomeController extends AbstractController
 
 
             "Booking" => [
-                 [
+                [
                     'name' => 'Filling of beds based on booking',
 
                     'description' => 'Get all filling percentage of bed and number of client wich come',
