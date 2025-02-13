@@ -146,6 +146,7 @@ class BedController extends AbstractController
         $bed->setNumber($editedBed->getNumber());
         $bed->setState($editedBed->getState());
         $bed->setOccupied($editedBed->isOccupied());
+        $bed->setReservable($editedBed->isReservable());
 
         #associate room
         $data = json_decode($request->getContent(), true);
