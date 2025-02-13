@@ -38,7 +38,7 @@ class BedController extends AbstractController
             'bed' => $bed,
             'bookings' => $bookings,
         ];
-        return $this->json($data, 200, [], ["groups" => ['bed', 'rooms']]);
+        return $this->json($data, 200, [], ["groups" => ['bed']]);
     }
 
     #[Route('/bed/new', name: 'new_bed', methods: "post", priority: 1)]
