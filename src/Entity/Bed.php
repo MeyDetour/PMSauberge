@@ -87,6 +87,7 @@ class Bed
 
     #[ORM\Column(nullable: true)]
     #[SerializedName('reservable')]
+    #[Groups(['bed', 'rooms_and_bed'])]
     private ?bool $isReservable = null;
 
     public function __construct()
