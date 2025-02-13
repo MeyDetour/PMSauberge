@@ -77,7 +77,7 @@ class Bed
     private Collection $bookings;
 
     #[ORM\Column]
-    #[Groups(['rooms'])]
+    #[Groups(['rooms','bed'])]
     #[SerializedName('occupied')]
     private ?bool $isOccupied = null;
 
