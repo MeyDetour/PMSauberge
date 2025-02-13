@@ -67,7 +67,9 @@ class BedController extends AbstractController
         if (!$globalService->isValidBool($bed->hasShelf())) {
             return $this->json(["message" => "Is there shelf storage ? (field : hasShelf, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
-
+        if (!$globalService->isValidBool($bed->isOccupied())) {
+            return $this->json(["message" => "Is the bed occupied ? (field : occupied, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
+        }
 
         $data = json_decode($request->getContent(), true);
         $roomId = $data['roomId'] ?? null;
@@ -127,11 +129,15 @@ class BedController extends AbstractController
         if (!$globalService->isValidBool($editedBed->hasShelf())) {
             return $this->json(["message" => "Is there shelf storage ? (field : hasShelf, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
+        if (!$globalService->isValidBool($editedBed->isOccupied())) {
+            return $this->json(["message" => "Is the bed occupied ? (field : occupied, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
+        }
         if (!in_array($editedBed->getState(),$this->stateValueAccepted))
         {
             return $this->json(["message" => "Not accepted value given for bed's state (field : blocked, cleaned, inspected, notCleaned, deleted])"], 406, [], ['groups' => 'rooms']);
         }
-            $bed->setBedShape($editedBed->getBedShape());
+
+        $bed->setBedShape($editedBed->getBedShape());
         $bed->setDoubleBed($editedBed->isDoubleBed());
         $bed->setHasLamp($editedBed->hasLamp());
         $bed->setHasLittleStorage($editedBed->hasLittleStorage());
@@ -139,6 +145,7 @@ class BedController extends AbstractController
         $bed->setSittingApart($editedBed->isSittingApart());
         $bed->setNumber($editedBed->getNumber());
         $bed->setState($editedBed->getState());
+        $bed->setOccupied($editedBed->isOccupied());
 
         #associate room
         $data = json_decode($request->getContent(), true);
