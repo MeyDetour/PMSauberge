@@ -70,12 +70,15 @@ class BedController extends AbstractController
         if (!$globalService->isValidBool($bed->isOccupied())) {
             return $this->json(["message" => "Is the bed occupied ? (field : occupied, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
+        if (!in_array($bed->getState(), $this->stateValueAccepted)) {
+            return $this->json(["message" => "Not accepted value given for bed's state (field : blocked, cleaned, inspected, notCleaned, deleted])"], 406, [], ['groups' => 'rooms']);
+        }
 
         $data = json_decode($request->getContent(), true);
         $roomId = $data['roomId'] ?? null;
 
         if (!$roomId) {
-            return $this->json(["message" => "Room ID is required"], 400);
+            return $this->json(["message" => "Please select room"], 400);
         }
 
         $room = $roomRepository->find($roomId);
@@ -87,12 +90,11 @@ class BedController extends AbstractController
         // Associer la chambre au lit
         $bed->setRoom($room);
         $bed->setOccupied(false);
-        $bed->setState("cleaned");
         try {
             $manager->persist($bed);
             $manager->flush();
         } catch (UniqueConstraintViolationException $e) {
-            return $this->json(["message" => "This number of bed already existe"], 406, [], ['groups' => 'rooms']);
+            return $this->json(["message" => "This name of bed already existe"], 406, [], ['groups' => 'rooms']);
         }
 
         return $this->json($bed, 201, [], ['groups' => ['bed']]);
@@ -132,8 +134,7 @@ class BedController extends AbstractController
         if (!$globalService->isValidBool($editedBed->isOccupied())) {
             return $this->json(["message" => "Is the bed occupied ? (field : occupied, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
-        if (!in_array($editedBed->getState(),$this->stateValueAccepted))
-        {
+        if (!in_array($editedBed->getState(), $this->stateValueAccepted)) {
             return $this->json(["message" => "Not accepted value given for bed's state (field : blocked, cleaned, inspected, notCleaned, deleted])"], 406, [], ['groups' => 'rooms']);
         }
 

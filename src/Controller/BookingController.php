@@ -59,6 +59,7 @@ class BookingController extends AbstractController
             ], 200);
         }
 
+
         $today = new DateTime();
         $halfJourney = $today->format("d.m.Y 12:00");
         $todayFirstHour = $today->format("d.m.Y 00:01");
@@ -127,12 +128,17 @@ class BookingController extends AbstractController
 
         }
 
+        if ($totalPrivateRoom !== 0){
+            $privateRoomPercentage = round($privateRoomOccupied/$totalPrivateRoom);
+        }else{
+            $privateRoomPercentage=0;
+        }
 
         return $this->json([
             "clientsToCome" => $clientToCome,
             "clientsDeparture" => $clientDeparture,
             "globalFillingPercentage" => round($globalFilling / $totalBedNumber),
-            "privateRoomFillingPercentage" => round($privateRoomOccupied/$totalPrivateRoom),
+            "privateRoomFillingPercentage" => $privateRoomPercentage,
             "morningFillingPercentage" => round($fillingInMorning/$totalBedNumber),
             "nightFillingPercentage" => round($fillingInNight/$totalBedNumber),
         ], 200);
