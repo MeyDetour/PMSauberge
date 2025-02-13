@@ -33,7 +33,7 @@ class Bed
 
     #[ORM\ManyToOne(inversedBy: 'beds')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['entireBooking'])]
+    #[Groups(['entireBooking','bed'])]
     private ?Room $room = null;
 
     #[ORM\Column(unique: true)]
