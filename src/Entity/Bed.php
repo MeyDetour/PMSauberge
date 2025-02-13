@@ -296,6 +296,9 @@ class Bed
 
     public function isReservable(): ?bool
     {
+        if (!$this->isReservable){
+            return false;
+        }
         return $this->isReservable;
     }
 
