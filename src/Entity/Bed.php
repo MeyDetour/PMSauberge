@@ -214,6 +214,9 @@ class Bed
 
     public function hasLamp(): ?bool
     {
+        if (!$this->hasLamp){
+            return false;
+        }
         return $this->hasLamp;
     }
 
@@ -226,6 +229,9 @@ class Bed
 
     public function hasLittleStorage(): ?bool
     {
+        if (!$this->hasLittleStorage){
+            return false;
+        }
         return $this->hasLittleStorage;
     }
 
@@ -237,7 +243,9 @@ class Bed
     }
 
     public function hasShelf(): ?bool
-    {
+    {   if (!$this->hasShelf){
+        return false;
+    }
         return $this->hasShelf;
     }
 
@@ -277,11 +285,15 @@ class Bed
 
     public function isOccupied(): ?bool
     {
+        if (!$this->isOccupied){
+            return false;
+        }
         return $this->isOccupied;
     }
 
     public function setOccupied(bool $isOccupied): static
     {
+
         $this->isOccupied = $isOccupied;
 
         return $this;
