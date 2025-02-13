@@ -42,31 +42,32 @@ class BedController extends AbstractController
     }
 
     #[Route('/bed/new', name: 'new_bed', methods: "post", priority: 1)]
-    public function new(Request $request, SerializerInterface $serializer, EntityManagerInterface $manager, RoomRepository $roomRepository,GlobalService $globalService): Response
+    public function new(Request $request, SerializerInterface $serializer, EntityManagerInterface $manager, RoomRepository $roomRepository, GlobalService $globalService): Response
     {
         $bed = $serializer->deserialize($request->getContent(), Bed::class, 'json');
 
-        if ( !$globalService->isValidBool($bed->isSittingApart()) ) {
+        if (!$globalService->isValidBool($bed->isSittingApart())) {
             return $this->json(["message" => "Is the bed sitting apart ? (field : sittingApart, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
-        if ( !$globalService->isValidBool($bed->isDoubleBed()) ) {
+        if (!$globalService->isValidBool($bed->isDoubleBed())) {
             return $this->json(["message" => "Is the bed a double bed ? (field : doubleBed, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
         if (!in_array($bed->getBedShape(), $this->bedFormValues)) {
             return $this->json(["message" => "Not accepted value given for bed's shape (field : bedShape, accepted : topBed,bottomBed,singleBed)"], 406, [], ['groups' => 'rooms']);
         }
-        if ( !$globalService->isValidBool($bed->hasLamp()) ) {
+        if (!$globalService->isValidBool($bed->hasLamp())) {
             return $this->json(["message" => "Is there bedlight ?  (field : hasLamp, accepted : true,false) "], 406, [], ['groups' => 'rooms']);
         }
-        if ( !$globalService->isValidBool($bed->hasLittleStorage()) ) {
+        if (!$globalService->isValidBool($bed->hasLittleStorage())) {
             return $this->json(["message" => "Is there little storage ? (field : hasLittleStorage, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
-        if ( !$globalService->isValidBool($bed->isReservable()) ) {
+        if (!$globalService->isValidBool($bed->isReservable())) {
             return $this->json(["message" => "Is bed reservable ?  (field : reservable, accepted : true,false) "], 406, [], ['groups' => 'rooms']);
         }
-        if ( !$globalService->isValidBool($bed->hasShelf())) {
+        if (!$globalService->isValidBool($bed->hasShelf())) {
             return $this->json(["message" => "Is there shelf storage ? (field : hasShelf, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
+
 
         $data = json_decode($request->getContent(), true);
         $roomId = $data['roomId'] ?? null;
@@ -96,7 +97,7 @@ class BedController extends AbstractController
     }
 
     #[Route('/bed/edit/{id}', name: 'edit_bed', methods: "put",)]
-    public function edit(Bed $bed, Request $request, SerializerInterface $serializer, EntityManagerInterface $manager, RoomRepository $roomRepository , GlobalService $globalService): Response
+    public function edit(Bed $bed, Request $request, SerializerInterface $serializer, EntityManagerInterface $manager, RoomRepository $roomRepository, GlobalService $globalService): Response
     {
         if ($bed->getState() == "deleted") {
             return $this->json(["message" => "Bed is deleted"]);
@@ -105,35 +106,39 @@ class BedController extends AbstractController
         $editedBed = $serializer->deserialize($request->getContent(), Bed::class, 'json');
 
 
-        if ( !$globalService->isValidBool($editedBed->isSittingApart()) ) {
+        if (!$globalService->isValidBool($editedBed->isSittingApart())) {
             return $this->json(["message" => "Is the bed sitting apart ? (field : sittingApart, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
-        if ( !$globalService->isValidBool($editedBed->isDoubleBed()) ) {
+        if (!$globalService->isValidBool($editedBed->isDoubleBed())) {
             return $this->json(["message" => "Is the bed a double bed ? (field : doubleBed, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
         if (!in_array($editedBed->getBedShape(), $this->bedFormValues)) {
             return $this->json(["message" => "Not accepted value given for bed's shape (field : bedShape, accepted : topBed,bottomBed,singleBed)"], 406, [], ['groups' => 'rooms']);
         }
-        if ( !$globalService->isValidBool($editedBed->hasLamp()) ) {
+        if (!$globalService->isValidBool($editedBed->hasLamp())) {
             return $this->json(["message" => "Is there bedlight ?  (field : hasLamp, accepted : true,false) "], 406, [], ['groups' => 'rooms']);
         }
-        if ( !$globalService->isValidBool($editedBed->isReservable()) ) {
+        if (!$globalService->isValidBool($editedBed->isReservable())) {
             return $this->json(["message" => "Is bed reservable ?  (field : reservable, accepted : true,false) "], 406, [], ['groups' => 'rooms']);
         }
-        if ( !$globalService->isValidBool($editedBed->hasLittleStorage()) ) {
+        if (!$globalService->isValidBool($editedBed->hasLittleStorage())) {
             return $this->json(["message" => "Is there little storage ? (field : hasLittleStorage, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
-        if ( !$globalService->isValidBool($editedBed->hasShelf())) {
+        if (!$globalService->isValidBool($editedBed->hasShelf())) {
             return $this->json(["message" => "Is there shelf storage ? (field : hasShelf, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
-
-        $bed->setBedShape($editedBed->getBedShape());
+        if (!in_array($editedBed->getState(),$this->stateValueAccepted))
+        {
+            return $this->json(["message" => "Not accepted value given for bed's state (field : blocked, cleaned, inspected, notCleaned, deleted])"], 406, [], ['groups' => 'rooms']);
+        }
+            $bed->setBedShape($editedBed->getBedShape());
         $bed->setDoubleBed($editedBed->isDoubleBed());
         $bed->setHasLamp($editedBed->hasLamp());
         $bed->setHasLittleStorage($editedBed->hasLittleStorage());
         $bed->setHasShelf($editedBed->hasShelf());
         $bed->setSittingApart($editedBed->isSittingApart());
         $bed->setNumber($editedBed->getNumber());
+        $bed->setState($editedBed->getState());
 
         #associate room
         $data = json_decode($request->getContent(), true);
@@ -159,6 +164,7 @@ class BedController extends AbstractController
         return $this->json($bed, 200, [], ['groups' => ['bed', 'rooms']]);
 
     }
+
     #[Route('/bed/{id}/change/occupation', name: 'change_occupied', methods: "patch",)]
     #[Route('/bed/clean/{id}', name: 'clean_bed', methods: "patch",)]
     #[Route('/bed/inspect/{id}', name: 'inspect_bed', methods: "patch",)]
@@ -168,10 +174,10 @@ class BedController extends AbstractController
     {
 
         $route = $request->attributes->get('_route');
-        if ($bed->getState() == "deleted" && $route!="unremove_bed") {
+        if ($bed->getState() == "deleted" && $route != "unremove_bed") {
             return $this->json(["message" => "Bed is deleted"]);
         }
-        switch ($route){
+        switch ($route) {
             case "clean_bed" :
                 $bed->setState("cleaned");
                 $bed->setCleanedBy($this->getUser());
