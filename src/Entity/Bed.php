@@ -33,7 +33,7 @@ class Bed
 
     #[ORM\ManyToOne(inversedBy: 'beds')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['entireBooking','bed'])]
+    #[Groups(['entireBooking'])]
     private ?Room $room = null;
 
     #[ORM\Column(unique: true)]
@@ -129,6 +129,15 @@ class Bed
     public function getRoom(): ?Room
     {
         return $this->room;
+    }
+
+    #[Groups(['bed'])]
+    public function getRoomId(): ?int
+    {
+        if ($this->room){
+            return $this->room->getId();
+        }
+       return 0;
     }
 
     public function setRoom(?Room $room): static
