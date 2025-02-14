@@ -65,7 +65,9 @@ class RoomController extends AbstractController
         if (!$globalService->isValidBool($room->hasWardrobe())) {
             return $this->json(["message" => "Has the room a wardrobe ? (field : hasWardobe, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
         }
-
+        if (!$globalService->isValidString($room->getName())) {
+            return $this->json(["message" => "Please enter name of room ? (field : name, accepted : string)"], 406, [], ['groups' => 'rooms']);
+        }
 
         try {
             $entityManager->persist($room);
@@ -106,6 +108,8 @@ class RoomController extends AbstractController
         }
         if (!$globalService->isValidBool($room->hasWardrobe())) {
             return $this->json(["message" => "Has the room a wardrobe ? (field : hasWardobe, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
+        }if (!$globalService->isValidString($room->getName())) {
+            return $this->json(["message" => "Please enter name of room ? (field : name, accepted : string)"], 406, [], ['groups' => 'rooms']);
         }
         $room->setName($room2->getName());
         $room->setPrivate($room2->isPrivate());
