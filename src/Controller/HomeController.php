@@ -588,6 +588,7 @@ class HomeController extends AbstractController
                         "endDate" => "d.m.Y H:i",
                         "phoneNumber" => "string",
                         "mail" => "string",
+                        "mainClient" => ["firstName" => "string", "lastName" => "string", "birthDate" => "d.m.Y 00:00"],
                         "clients" => [
                             ["firstName" => "string", "lastName" => "string", "birthDate" => "d.m.Y 00:00"],
                             ["firstName" => "string", "lastName" => "string", "birthDate" => "d.m.Y 00:00"]
