@@ -286,7 +286,7 @@ class HomeController extends AbstractController
                     'sendBack' => "The room modified",
                     'token' => true
                 ], [
-                    'name' => 'Remove room and its beds', 'description' => 'Remove room: Deletes a room if it has no associated beds.',
+                    'name' => 'Remove room', 'description' => 'Remove room: Deletes a room if it has no associated beds.',
                     'route' => '/api/room/remove/{id}',
                     'methode' => 'DELETE',
                     'body' => null,
