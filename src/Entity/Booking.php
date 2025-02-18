@@ -55,10 +55,6 @@ class Booking
     #[Groups(['entireBooking'])]
     private Collection $beds;
 
-    #[ORM\Column]
-    #[Groups(['entireBooking', 'bookings'])]
-    #[SerializedName('finished')]
-    private ?bool $isFinished = null;
 
     #[ORM\Column]
     #[Groups(['entireBooking', 'bookings'])]
@@ -66,7 +62,7 @@ class Booking
     private ?bool $isPaid = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['entireBooking', 'bookings', 'clients'])]
+    #[Groups(['entireBooking', 'bookings', 'clients','bed'])]
     private ?string $advencement = null;
     //refund,progress,done,waiting
 
@@ -203,17 +199,16 @@ class Booking
         return $this;
     }
 
+    #[Groups(['entireBooking','bed' ,'bookings'])]
     public function isFinished(): ?bool
     {
-        return $this->isFinished;
+        $today = new \DateTime();
+        if ($this->getEndDate()<$today){
+            return true;
+        }
+        return false;
     }
 
-    public function setFinished(bool $isFinished): static
-    {
-        $this->isFinished = $isFinished;
-
-        return $this;
-    }
 
     public function isPaid(): ?bool
     {
