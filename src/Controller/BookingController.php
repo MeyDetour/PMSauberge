@@ -289,7 +289,6 @@ class BookingController extends AbstractController
         //price is calculated
         $booking->setPrice((count($booking->getClients()) + 1) * 50);
 
-        $booking->setFinished(false);
         $booking->setPaid(false);
         $booking->setAdvencement("waiting");
         $booking->setCreatedAt(new \DateTimeImmutable());
@@ -364,18 +363,6 @@ class BookingController extends AbstractController
 
     }
 
-    #[Route('/booking/finish/{id}', name: 'finish_booking', methods: 'patch')]
-    public function finishBooking(Booking $booking, EntityManagerInterface $manager): Response
-    {
-
-        $booking->setAdvencement("done");
-        $booking->setFinished(true);
-        $manager->persist($booking);
-        $manager->flush();
-
-        return $this->json($booking, 201, [], ['groups' => ['entireBooking']]);
-
-    }
 
     #[Route('/booking/remove/{id}', name: 'remove_booking')]
     public function remove(Booking $booking, EntityManagerInterface $manager): Response

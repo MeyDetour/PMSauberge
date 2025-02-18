@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Service\DateService;
 use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\Serializer\Annotation as Serializer;
 use App\Repository\BookingRepository;

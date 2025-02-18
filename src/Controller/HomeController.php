@@ -578,7 +578,7 @@ class HomeController extends AbstractController
                 ],
                 [
                     'name' => 'Create booking',
-                    'route' => '/api/bookinging/new',
+                    'route' => '/api/booking/new',
                     'description' => 'Create reservation: Ensures all required fields are provided and valid, and checks if an adult is included in the group. If no adult is found, an error is returned. Beds are assigned based on the number of people. If the hotel lacks enough available beds, an error is returned. Group size must perfectly match the available capacity in a shared room but has no restriction for private rooms. For immediate reservations, the beds must be available and cleaned.',
 
                     'methode' => 'POST',
