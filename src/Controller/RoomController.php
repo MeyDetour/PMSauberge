@@ -36,7 +36,7 @@ class RoomController extends AbstractController
         return $this->json($room, 200, [], ['groups' => ['rooms_and_bed']]);
     }
 
-    #[Route('/rooms/beds/date', name: 'get_rooms_and_bed_free_at_this_date', methods: ['GET'])]
+    #[Route('/rooms/beds', name: 'get_rooms_and_bed_free_at_this_date', methods: ['GET'])]
     public function getRoomsWithBedFreeAtThisDate(RoomRepository $roomRepository, Request $request): Response
     {
 
