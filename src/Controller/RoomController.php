@@ -41,9 +41,14 @@ class RoomController extends AbstractController
     {
 
         $desiredDate = $request->query->get('date');
-        if (!$desiredDate) {
-            return $this->json(['message' => 'Date parameter is missing'], 400);
+        if (!$desiredDate || !strtotime($desiredDate)) {
+            return $this->json(['error' => 'Invalid date format'], 400);
         }
+
+        // Convertir la chaîne de date en objet DateTime
+        $desiredDate = new \DateTime($desiredDate);
+
+
         $finalData = [];
         $rooms = $roomRepository->findBy([], ['name' => 'ASC']);
         foreach ($rooms as $room) {
