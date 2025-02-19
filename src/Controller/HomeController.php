@@ -198,6 +198,36 @@ class HomeController extends AbstractController
                         ], ['...']
                     ],
                     'token' => true
+                ],  [
+                    'name' => 'Get Rooms And Bed With Bed Free For Specific date',
+                    'description' => 'Returns a list of rooms with his beds. You must provide date',
+                    'route' => '/api/rooms/bed?date=',
+                    'methode' => 'GET',
+                    'body' => null,
+                    'sendBack' => [
+                        [
+                            "id" => "int (AI) (NOT NULL)",
+                            "name" => "string",
+                            "hasPrivateShowerroom" => "boolean",
+                            "hasLocker" => "boolean",
+                            "private" => "boolean",
+                            "bedsNumber" => 'int',
+                            "hasTable" => "boolean",
+                            "hasBalcony" => "boolean",
+                            "hasWashtub" => "boolean",
+                            "hasBin" => "boolean",
+                            "hasWardrobe" => "boolean",
+                            "beds" => [
+                                [
+                                    "id" => "int (AI) (NOT NULL)",
+                                    "occupied" => "boolean",
+                                    "number" => "string"
+                                ], ["..."]
+
+                            ]
+                        ], ['...']
+                    ],
+                    'token' => true
                 ], [
                     'name' => 'Get Rooms Names',
                     'description' => 'Returns a list of rooms with their names without details',

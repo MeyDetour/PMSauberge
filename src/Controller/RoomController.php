@@ -36,6 +36,52 @@ class RoomController extends AbstractController
         return $this->json($room, 200, [], ['groups' => ['rooms_and_bed']]);
     }
 
+    #[Route('/rooms/beds/date', name: 'get_rooms_and_bed_free_at_this_date', methods: ['GET'])]
+    public function getRoomsWithBedFreeAtThisDate(RoomRepository $roomRepository, Request $request): Response
+    {
+
+        $desiredDate = $request->query->get('date');
+        if (!$desiredDate) {
+            return $this->json(['message' => 'Date parameter is missing'], 400);
+        }
+        $finalData = [];
+        $rooms = $roomRepository->findBy([], ['name' => 'ASC']);
+        foreach ($rooms as $room) {
+            foreach ($room->getBeds() as $bed) {
+                if (!$this->isBedFreeAtThisDate($bed, $desiredDate)) {
+                    $room->removeBed($bed);
+                }
+            }
+            if (count($room->getBeds()) != 0) {
+                $finalData[] = $room;
+            }
+        }
+
+        return $this->json($finalData, 200, [], ['groups' => ['rooms']]);
+    }
+
+    private function isBedFreeAtThisDate($bed, $date)
+    {
+        if (!$bed->isReservable()) {
+            return false;
+        }
+
+        if (count($bed->getBookings()) == 0) {
+            return true;
+        } else {
+            foreach ($bed->getBookings() as $booking) {
+                $startDateOfBooking = $booking->getStartDate();
+                $endDateOfBooking = $booking->getEndDate();
+                if (
+                    ($startDateOfBooking <= $date and $date <= $endDateOfBooking)
+                ) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     #[Route('/room/new', name: 'new_room', methods: ['POST'])]
     public function new(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, GlobalService $globalService): Response
     {
@@ -108,7 +154,8 @@ class RoomController extends AbstractController
         }
         if (!$globalService->isValidBool($room->hasWardrobe())) {
             return $this->json(["message" => "Has the room a wardrobe ? (field : hasWardobe, accepted : true,false)"], 406, [], ['groups' => 'rooms']);
-        }if (!$globalService->isValidString($room->getName())) {
+        }
+        if (!$globalService->isValidString($room->getName())) {
             return $this->json(["message" => "Please enter name of room ? (field : name, accepted : string)"], 406, [], ['groups' => 'rooms']);
         }
         $room->setName($room2->getName());
