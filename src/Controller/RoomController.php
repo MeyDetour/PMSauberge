@@ -51,16 +51,10 @@ class RoomController extends AbstractController
 
         $finalData = [];
         $rooms = $roomRepository->findBy([], ['name' => 'ASC']);
-        foreach ($rooms as $room) {
-            foreach ($room->getBeds() as $bed) {
-                if (!$this->isBedFreeAtThisDate($bed, $desiredDate)) {
-                    $room->removeBed($bed);
-                }
-            }
-            if (count($room->getBeds()) != 0) {
-                $finalData[] = $room;
-            }
-        }
+        $filteredRooms = array_filter($rooms, function ($room) use ($desiredDate) {
+            $availableBeds = array_filter($room->getBeds()->toArray(), fn($bed) => $this->isBedFreeAtThisDate($bed, $desiredDate));
+            return !empty($availableBeds); // Garde la chambre si elle a des lits disponibles
+        });
 
         return $this->json($finalData, 200, [], ['groups' => ['rooms']]);
     }
@@ -70,20 +64,12 @@ class RoomController extends AbstractController
         if (!$bed->isReservable()) {
             return false;
         }
-
-        if (count($bed->getBookings()) == 0) {
-            return true;
-        } else {
-            foreach ($bed->getBookings() as $booking) {
-                $startDateOfBooking = $booking->getStartDate();
-                $endDateOfBooking = $booking->getEndDate();
-                if (
-                    ($startDateOfBooking <= $date and $date <= $endDateOfBooking)
-                ) {
-                    return false;
-                }
+        foreach ($bed->getBookings() as $booking) {
+            if ($booking->getStartDate() <= $date && $date <= $booking->getEndDate()) {
+                return false;
             }
         }
+
         return true;
     }
 
