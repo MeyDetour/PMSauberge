@@ -59,17 +59,13 @@ class RoomController extends AbstractController
 
     private function isBedFreeAtThisDate($bed, $date)
     {
-        var_dump($bed->getId(),"free");
 
         foreach ($bed->getBookings() as $booking) {
 
-            var_dump($bed->getId(),"analyse booking",$booking->getStartDate(),$booking->getEndDate());
-           var_dump($booking->getStartDate() <= $date && $date <= $booking->getEndDate());
-            if ($booking->getStartDate() <= $date && $date <= $booking->getEndDate()) {
+              if ($booking->getStartDate() <= $date && $date <= $booking->getEndDate()) {
                 return false;
             }
         }
-var_dump($bed->getId(),"free");
         return true;
     }
 
