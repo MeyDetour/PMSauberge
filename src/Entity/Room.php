@@ -139,6 +139,11 @@ class Room
 
         return $beds;
     }
+    public function setBeds(Collection $beds)
+    {
+        $this->beds = $beds;
+        return $this;
+    }
 
     public function addBed(Bed $bed): static
     {
