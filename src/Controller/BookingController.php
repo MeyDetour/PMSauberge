@@ -179,7 +179,7 @@ class BookingController extends AbstractController
 
             case"all":
                 $this->globalService->refreshData($bookingRepository, $manager);
-                $bookingsFinal = $bookingRepository->findAll();
+                $bookingsFinal = $bookingRepository->findBy([],["startDate"=>"DESC"]);
                 break;
         }
 
