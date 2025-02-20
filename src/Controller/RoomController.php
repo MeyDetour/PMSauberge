@@ -54,7 +54,6 @@ class RoomController extends AbstractController
             $availableBeds = array_filter($room->getBeds(), fn($bed) => $this->isBedFreeAtThisDate($bed, $desiredDate));
             return !empty($availableBeds); // Garde la chambre si elle a des lits disponibles
         });
-        dd("end");
         return $this->json($filteredRooms, 200, [], ['groups' => ['rooms']]);
     }
 
