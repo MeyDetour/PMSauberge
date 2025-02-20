@@ -54,21 +54,27 @@ class RoomController extends AbstractController
             $availableBeds = array_filter($room->getBeds(), fn($bed) => $this->isBedFreeAtThisDate($bed, $desiredDate));
             return !empty($availableBeds); // Garde la chambre si elle a des lits disponibles
         });
-
+        dd("end");
         return $this->json($filteredRooms, 200, [], ['groups' => ['rooms']]);
     }
 
     private function isBedFreeAtThisDate($bed, $date)
     {
+        var_dump($bed->getId(),"free");
         if (!$bed->isReservable()) {
+
+            var_dump($bed->getId(),"not reservable");
             return false;
         }
         foreach ($bed->getBookings() as $booking) {
+
+            var_dump($bed->getId(),"analyse booking",$booking->getStartDate(),$booking->getEndDate());
+           var_dump($booking->getStartDate() <= $date && $date <= $booking->getEndDate());
             if ($booking->getStartDate() <= $date && $date <= $booking->getEndDate()) {
                 return false;
             }
         }
-
+var_dump($bed->getId(),"free");
         return true;
     }
 
