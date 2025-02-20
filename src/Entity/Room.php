@@ -139,7 +139,7 @@ class Room
 
         return $beds;
     }
-    public function setBeds(Collection $beds)
+    public function setBeds(Collection $beds) :static
     {
         $this->beds = $beds;
         return $this;

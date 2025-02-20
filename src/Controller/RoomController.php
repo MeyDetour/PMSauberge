@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Room;
 use App\Repository\RoomRepository;
 use App\Service\GlobalService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -51,7 +52,7 @@ class RoomController extends AbstractController
 
         $rooms = $roomRepository->findBy([], ['name' => 'ASC']);
         $filteredRooms = array_filter($rooms, function ($room) use ($desiredDate) {
-            $availableBeds = array_filter($room->getBeds(), fn($bed) => $this->isBedFreeAtThisDate($bed, $desiredDate));
+            $availableBeds = new ArrayCollection( array_filter($room->getBeds(), fn($bed) => $this->isBedFreeAtThisDate($bed, $desiredDate)));
             $room->setBeds($availableBeds);
 
             return !empty($availableBeds); // Garde la chambre si elle a des lits disponibles
