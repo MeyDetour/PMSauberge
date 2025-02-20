@@ -52,6 +52,7 @@ class RoomController extends AbstractController
         $rooms = $roomRepository->findBy([], ['name' => 'ASC']);
         $filteredRooms = array_filter($rooms, function ($room) use ($desiredDate) {
             $availableBeds = array_filter($room->getBeds(), fn($bed) => $this->isBedFreeAtThisDate($bed, $desiredDate));
+            $room->setBeds($availableBeds);
 
             return !empty($availableBeds); // Garde la chambre si elle a des lits disponibles
         });
@@ -62,7 +63,7 @@ class RoomController extends AbstractController
     {
     var_dump("analyse bed ".$bed->getId());
         foreach ($bed->getBookings() as $booking) {
-            var_dump($booking->getId(),$booking->getStartDate() <= $date && $date <= $booking->getEndDate());
+            var_dump($booking->getStartDate() <= $date && $date <= $booking->getEndDate());
               if ($booking->getStartDate() <= $date && $date <= $booking->getEndDate()) {
                 return false;
             }
