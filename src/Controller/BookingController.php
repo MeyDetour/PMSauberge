@@ -47,15 +47,15 @@ class BookingController extends AbstractController
         $totalBedNumber = count($bedRepository->findBy(["isReservable" => true]));
         $totalPrivateRoom = count($roomRepository->findBy(["isPrivate" => true]));
 
-        if ($totalBedNumber == 0){
+        if ($totalBedNumber == 0) {
 
             return $this->json([
                 "clientsToCome" => 0,
                 "clientsDeparture" => 0,
-                "globalFillingPercentage" =>0,
+                "globalFillingPercentage" => 0,
                 "privateRoomFillingPercentage" => 0,
                 "morningFillingPercentage" => 0,
-                "nightFillingPercentage" =>  0,
+                "nightFillingPercentage" => 0,
             ], 200);
         }
 
@@ -112,7 +112,7 @@ class BookingController extends AbstractController
                 $halfJourney > $booking->getEndDate() && $booking->getEndDate() > $todayLastHour ||
                 $halfJourney > $booking->getStartDate() && $booking->getEndDate() > $todayLastHour
             ) {
-                $fillingInNight+= $booking->getBedsCount();
+                $fillingInNight += $booking->getBedsCount();
             }
 
             // Client to come
@@ -128,10 +128,10 @@ class BookingController extends AbstractController
 
         }
 
-        if ($totalPrivateRoom !== 0){
-            $privateRoomPercentage = round($privateRoomOccupied/$totalPrivateRoom);
-        }else{
-            $privateRoomPercentage=0;
+        if ($totalPrivateRoom !== 0) {
+            $privateRoomPercentage = round($privateRoomOccupied / $totalPrivateRoom);
+        } else {
+            $privateRoomPercentage = 0;
         }
 
         return $this->json([
@@ -139,53 +139,51 @@ class BookingController extends AbstractController
             "clientsDeparture" => $clientDeparture,
             "globalFillingPercentage" => round($globalFilling / $totalBedNumber),
             "privateRoomFillingPercentage" => $privateRoomPercentage,
-            "morningFillingPercentage" => round($fillingInMorning/$totalBedNumber),
-            "nightFillingPercentage" => round($fillingInNight/$totalBedNumber),
+            "morningFillingPercentage" => round($fillingInMorning / $totalBedNumber),
+            "nightFillingPercentage" => round($fillingInNight / $totalBedNumber),
         ], 200);
     }
 
-    #[Route('/bookings/get/passed', name: 'app_bookings_passed', methods: "get")]
-    #[Route('/bookings/get/waiting', name: 'waiting_booking', methods: 'get')]
-    #[Route('/bookings/get/refund', name: 'refund_booking', methods: 'get')]
-    #[Route('/bookings/get/done', name: 'done_booking', methods: 'get')]
-    #[Route('/bookings/get/progress', name: 'progress_booking', methods: 'get')]
-    #[Route('/bookings', name: 'app_bookings', methods: "get")]
-    public function getBookingsWithConditions(BookingRepository $bookingRepository, Request $request, EntityManagerInterface $manager): Response
+    #[Route('/bookings/get/{field}', name: 'get_specific_booking', methods: "get")]
+    public function getBookingsWithConditions(BookingRepository $bookingRepository, Request $request, EntityManagerInterface $manager, $field): Response
     {
+        $today = new DateTime();
+        $newOneWeek = (clone $today)->modify('+1 week');
+        $lastOneWeek = (clone $today)->modify('-1 week');
 
-        $route = $request->attributes->get('_route');
-        $bookings = [];
-        switch ($route) {
-            case "app_bookings_passed":
-                $bookingsData = $bookingRepository->findAll();
-                foreach ($bookingsData as $booking) {
-                    if ($this->globalService->isBookingPassed($booking)) {
-                        $bookings[] = $booking;
+        $bookings = $bookingRepository->findAll();
+        $bookingsFinal = [];
+        switch ($field) {
+            case "tocome":
+                foreach ($bookings as $booking) {
+                    if ($today <= $booking->getStartDate() and $booking->getStartDate() <= $newOneWeek) {
+                        $bookingsFinal[] = $booking;
                     }
                 }
                 break;
-            case "waiting_booking":
-                $bookings = $bookingRepository->findBy(['advencement' => "waiting"]);
+            case "today":
+                foreach ($bookings as $booking) {
+                    if ($booking->getStartDate() <= $today && $today <= $booking->getEndDate() && !$booking->isFinished()) {
+                        $bookingsFinal[] = $booking;
+                    }
+                }
                 break;
-            case "refund_booking":
-                $bookings = $bookingRepository->findBy(['advencement' => "refund"]);
-                break;
-            case "progress_booking":
-                $bookings = $bookingRepository->findBy(['advencement' => "progress"]);
-                break;
-            case "done_booking":
-                $bookings = $bookingRepository->findBy(['advencement' => "done"]);
-                break;
-            case"app_bookings":
 
+            case "passed":
+                foreach ($bookings as $booking) {
+                    if ($lastOneWeek <= $booking->getStartDate() and $booking->getStartDate() <= $today) {
+                        $bookingsFinal[] = $booking;
+                    }
+                }
+                break;
+
+            case"all":
                 $this->globalService->refreshData($bookingRepository, $manager);
-
-                $bookings = $bookingRepository->findAll();
-
+                $bookingsFinal = $bookingRepository->findAll();
                 break;
         }
 
-        return $this->json($bookings, 200, [], ['groups' => ['bookings']]);
+        return $this->json($bookingsFinal, 200, [], ['groups' => ['bookings']]);
     }
 
     #[Route('/booking/new', name: 'new_booking', methods: 'post')]
