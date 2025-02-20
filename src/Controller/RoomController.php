@@ -52,6 +52,7 @@ class RoomController extends AbstractController
         $rooms = $roomRepository->findBy([], ['name' => 'ASC']);
         $filteredRooms = array_filter($rooms, function ($room) use ($desiredDate) {
             $availableBeds = array_filter($room->getBeds(), fn($bed) => $this->isBedFreeAtThisDate($bed, $desiredDate));
+
             return !empty($availableBeds); // Garde la chambre si elle a des lits disponibles
         });
         return $this->json($filteredRooms, 200, [], ['groups' => ['rooms']]);
