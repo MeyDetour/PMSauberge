@@ -8,7 +8,7 @@ framework:
     serializer:
         enabled: true
         default_context:
-            datetime_format: "Y-M-DTH:i" # Format ISO 8601, mais tu peux en changer si besoin
+            datetime_format: "Y-m-dTH:i" # Format ISO 8601, mais tu peux en changer si besoin
     #esi: true
     #fragments: true
     error_controller: 'App\Controller\ExceptionController::handleException'
