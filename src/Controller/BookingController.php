@@ -216,6 +216,8 @@ class BookingController extends AbstractController
         if ($booking->getMainClient()->getBirthDate() == null) {
             return $this->json(["message" => "You must provide a birthDate for main client. (field : mainClient, accepted : {firstName,lastName,birthDate} )"], 406);
         }
+        dd($booking);
+
         $clientExist = $clientRepository->findOneBy(["firstName" => $booking->getMainClient()->getFirstName(), "lastName" => $booking->getMainClient()->getLastName(), "birthDate" => $booking->getMainClient()->getBirthDate()]);
         if ($clientExist) {
             $booking->setMainClient($clientExist);
