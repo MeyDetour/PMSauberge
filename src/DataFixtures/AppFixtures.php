@@ -64,6 +64,7 @@ class AppFixtures extends Fixture
                 $bed->setHasLittleStorage(false);
                 $bed->setHasShelf(false);
                 $bed->setOccupied(false);
+                $bed->setReservable(true);
                 $bed->setRoom($room);
                 $manager->persist($bed);
                 $count++;
