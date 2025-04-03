@@ -135,12 +135,20 @@ class BookingController extends AbstractController
         }
 
 
-        //range for 10years
-        $rangeFor10Year = 4;
+        //number of stack of 10 years
+        $stacksOf10Years = 4;
+
+        //number of stack of 10 years
+        $stackOfYears = $stacksOf10Years * 10;
+
+        //number of stack of 10 years
+        $stackOfMonths = $stackOfYears * 12;
         $bookingsThisYear = [];
         $bookingsThis10Years = [];
         $bookingsThisMonth = [];
-        for ($i = 0; $i < $rangeFor10Year; $i++) {
+
+        //get stack of 10 years
+        for ($i = 0; $i < $stacksOf10Years; $i++) {
             $year2 = (clone $today)->modify("- " . (10 * $i) . " years");
             $year1 = (clone $today)->modify("- " . (10 * ($i + 1)) . " years");
             $year1Int = intval($year1->format('Y'));
@@ -155,16 +163,47 @@ class BookingController extends AbstractController
                 $this10Year  [] = $bookingRepository->countAllBetweenDate($firstDayInYear, $endDayOfYear);
             }
             $bookingsThis10Years[] = [
-                "year1" => $year1Int,
-                "year2" => $year2Int,
+                "mumber" => $year2Int,
                 "data" => $this10Year,
             ];
-
-
         }
 
-        dump($bookingsThis10Years);
-        dd("ok");
+        //get stack of 1 year
+        $listOfMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        for ($i = 0; $i < $stackOfYears; $i++) {
+
+            $yearStudied = (clone $today)->modify("- $i years");
+
+            $thisMonths = [];
+            for ($m = 0; $m < 12; $m++) {
+                $firstDayOfMonth = $yearStudied->modify('first day of ' . $listOfMonths[$m]);
+                $lastDayOfMonth = $yearStudied->modify('last day of ' . $listOfMonths[$m]);
+                $thisMonths  [] = $bookingRepository->countAllBetweenDate($firstDayOfMonth, $lastDayOfMonth);
+            }
+            $bookingsThis10Years[] = [
+                "number" => $yearStudied->format('Y'),
+                "data" => $thisMonths,
+            ];
+        }
+
+// Stack de X mois
+        for ($i = 0; $i < $stackOfMonths; $i++) {
+            $month = (clone $today)->modify("- $i month");
+            $daysInMonth = intval($month->format('t')); // Nombre de jours dans le mois
+
+            $thisMonths = [];
+            for ($m = 1; $m <= $daysInMonth; $m++) { // De 1 à nombre de jours du mois
+                $firstHourDay = new DateTime($month->format('Y-m') . "-$m 00:00:00");
+                $lastHourDay = new DateTime($month->format('Y-m') . "-$m 23:59:59");
+
+                $thisMonths[] = $bookingRepository->countAllBetweenDate($firstHourDay, $lastHourDay);
+            }
+
+            $bookingsThis10Years[] = [
+                "number" => $i,
+                "data" => $thisMonths,
+            ];
+        }
 
         return $this->json([
             "clientsToCome" => $clientToCome,
