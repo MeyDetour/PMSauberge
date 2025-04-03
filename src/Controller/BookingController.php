@@ -160,7 +160,7 @@ class BookingController extends AbstractController
         }
 
         dump($bookingsThis10Years);
-
+dd("ok");
 
         return $this->json([
             "clientsToCome" => $clientToCome,
