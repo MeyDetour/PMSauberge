@@ -145,6 +145,7 @@ class BookingController extends AbstractController
             $year1 = (clone $today)->modify("- " . (10 * ($i + 1)) . " years");
             $year1 = intval($year1->format('YYYY'));
             $year2 = intval($year2->format('YYYY'));
+            dump($year1,$year2);
             $this10Year = [];
             for ($y = $year1; $y <= $year2;$y++){
                 $firstDayInYear = new DateTime("$y-01-01");
