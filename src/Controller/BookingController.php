@@ -64,7 +64,7 @@ class BookingController extends AbstractController
         $halfJourney = $today->format("d.m.Y 12:00");
         $todayFirstHour = $today->format("d.m.Y 00:01");
         $todayLastHour = $today->format("d.m.Y 23:59");
-        $today = $today->format("d.m.Y");
+        $todayString = $today->format("d.m.Y");
 
 
         $bookings = $bookingRepository->findAll();
@@ -77,12 +77,11 @@ class BookingController extends AbstractController
         $fillingInMorning = 0;
         $fillingInNight = 0;
 
-
         foreach ($bookings as $booking) {
 
             // Global filling
             if (
-                ($booking->getStartDate() <= $today && $today <= $booking->getEndDate() && !$booking->isFinished()) ||
+                ($booking->getStartDate() <= $todayString && $todayString <= $booking->getEndDate() && !$booking->isFinished()) ||
                 $todayFirstHour < $booking->getEndDate() && $booking->getEndDate() < $halfJourney ||
                 $todayFirstHour < $booking->getStartDate() && $booking->getStartDate() < $halfJourney ||
                 $halfJourney > $booking->getEndDate() && $booking->getEndDate() > $todayLastHour ||
@@ -116,12 +115,12 @@ class BookingController extends AbstractController
             }
 
             // Client to come
-            if ($booking->getStartDate() /*it's datetime*/ == $today) {
+            if ($booking->getStartDate() /*it's datetime*/ == $todayString) {
                 $clientToCome += $booking->getClientsNumber();
             }
 
             // Departure
-            if ($booking->getEndDate() /*it's datetime*/ == $today) {
+            if ($booking->getEndDate() /*it's datetime*/ == $todayString) {
                 $clientDeparture += $booking->getClientsNumber();
             }
 
@@ -134,6 +133,24 @@ class BookingController extends AbstractController
             $privateRoomPercentage = 0;
         }
 
+
+
+        //range for 10years
+        $rangeForThenYear = 4;
+        $bookingsThisYear = [];
+        $bookingsThis10Years = [];
+        $bookingsThisMonth = [];
+        for ($i =0 ; $i <$rangeForThenYear; $i++){
+            $year2 = (clone $today)->modify("- " . (10 * $i) . " years");
+            $year1 = (clone $today)->modify("- " . (10 * ($i + 1)) . " years");
+            $bookingRepository->countAllBetweenDate($year1,$year2);
+
+        }
+
+
+
+
+
         return $this->json([
             "clientsToCome" => $clientToCome,
             "clientsDeparture" => $clientDeparture,
@@ -141,6 +158,9 @@ class BookingController extends AbstractController
             "privateRoomFillingPercentage" => $privateRoomPercentage,
             "morningFillingPercentage" => round($fillingInMorning / $totalBedNumber),
             "nightFillingPercentage" => round($fillingInNight / $totalBedNumber),
+            "bookingsThisYear" => $bookingsThisYear,
+            "bookingsThis10Years" => $bookingsThis10Years,
+            "bookingsThisMonth" => $bookingsThisMonth
         ], 200);
     }
 
@@ -179,7 +199,7 @@ class BookingController extends AbstractController
 
             case"all":
                 $this->globalService->refreshData($bookingRepository, $manager);
-                $bookingsFinal = $bookingRepository->findBy([],["startDate"=>"ASC"]);
+                $bookingsFinal = $bookingRepository->findBy([], ["startDate" => "ASC"]);
                 break;
         }
 
