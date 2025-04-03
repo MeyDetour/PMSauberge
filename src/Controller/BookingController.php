@@ -139,10 +139,10 @@ class BookingController extends AbstractController
         $stacksOf10Years = 4;
 
         //number of stack of 10 years
-        $stackOfYears = $stacksOf10Years * 10;
+        $stackOfYears = 4 * 10;
 
         //number of stack of 10 years
-        $stackOfMonths = $stackOfYears * 12;
+        $stackOfMonths = 5 * 12;
         $bookingsThisYear = [];
         $bookingsThis10Years = [];
         $bookingsThisMonth = [];
