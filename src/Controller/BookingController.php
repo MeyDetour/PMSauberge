@@ -136,17 +136,21 @@ class BookingController extends AbstractController
 
 
         //range for 10years
-        $rangeForThenYear = 4;
+        $rangeFor10Year = 4;
         $bookingsThisYear = [];
         $bookingsThis10Years = [];
         $bookingsThisMonth = [];
-        for ($i =0 ; $i <$rangeForThenYear; $i++){
+        for ($i =0 ; $i <$rangeFor10Year; $i++){
             $year2 = (clone $today)->modify("- " . (10 * $i) . " years");
             $year1 = (clone $today)->modify("- " . (10 * ($i + 1)) . " years");
-            $bookingRepository->countAllBetweenDate($year1,$year2);
+
+            $bookingsThis10Years []=      $bookingRepository->countAllBetweenDate($year1,$year2);
+            dump($year1,$year2);
+
 
         }
 
+        dump($bookingsThis10Years);
 
 
 
