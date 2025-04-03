@@ -19,7 +19,7 @@ class BookingRepository extends ServiceEntityRepository
     /**
      * @return Booking[] Returns an array of Booking objects
      */
-    public function countAllBetweenDate($date1,$date2): array
+    public function countAllBetweenDate($date1,$date2):  int
     {
         return $this->createQueryBuilder('b')
             ->select('COUNT(b.id)')
