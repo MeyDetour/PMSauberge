@@ -143,24 +143,28 @@ class BookingController extends AbstractController
         for ($i = 0; $i < $rangeFor10Year; $i++) {
             $year2 = (clone $today)->modify("- " . (10 * $i) . " years");
             $year1 = (clone $today)->modify("- " . (10 * ($i + 1)) . " years");
-            $year1 = intval($year1->format('Y'));
-            $year2 = intval($year2->format('Y'));
-            dump($year1,$year2);
+            $year1Int = intval($year1->format('Y'));
+            $year2Int = intval($year2->format('Y'));
+
             $this10Year = [];
-            for ($y = $year1; $y <= $year2;$y++){
+            for ($y = $year1Int; $y <= $year2Int; $y++) {
                 $firstDayInYear = new DateTime("$y-01-01");
                 $firstDayInYear->modify('first day of January');
                 $endDayOfYear = new DateTimeImmutable("$y-01-01");
                 $endDayOfYear = $endDayOfYear->modify('first day of December');
-                $this10Year  [] = $bookingRepository->countAllBetweenDate($firstDayInYear,$endDayOfYear);
+                $this10Year  [] = $bookingRepository->countAllBetweenDate($firstDayInYear, $endDayOfYear);
             }
-            $bookingsThis10Years[]=$this10Year;
+            $bookingsThis10Years[] = [
+                "year1" => $year1Int,
+                "year2" => $year2Int,
+                "data" => $this10Year,
+            ];
 
 
         }
 
         dump($bookingsThis10Years);
-dd("ok");
+        dd("ok");
 
         return $this->json([
             "clientsToCome" => $clientToCome,
