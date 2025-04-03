@@ -10,6 +10,7 @@ use App\Repository\ClientRepository;
 use App\Repository\RoomRepository;
 use App\Service\GlobalService;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\DBAL\Exception\DatabaseDoesNotExist;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -146,7 +147,11 @@ class BookingController extends AbstractController
             $year2 = intval($year2);
             $this10Year = [];
             for ($y = $year1; $y <= $year2;$y++){
-                $this10Year  [] = $bookingRepository->countAllBetweenDate($year1, $year2);
+                $firstDayInYear = new DateTime("$y-01-01");
+                $firstDayInYear->modify('first day of January');
+                $endDayOfYear = new DateTimeImmutable("$y-01-01");
+                $endDayOfYear = $endDayOfYear->modify('first day of December');
+                $this10Year  [] = $bookingRepository->countAllBetweenDate($firstDayInYear,$endDayOfYear);
             }
             $bookingsThis10Years[]=$this10Year;
 
