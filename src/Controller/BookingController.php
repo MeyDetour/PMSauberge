@@ -163,8 +163,7 @@ class BookingController extends AbstractController
                 $this10Year  [] = $bookingRepository->countAllBetweenDate($firstDayInYear, $endDayOfYear);
             }
             $bookingsThis10Years[] = [
-                "mumber" => $year2Int,
-                "data" => $this10Year,
+                $year2Int => $this10Year,
             ];
         }
 
@@ -181,8 +180,7 @@ class BookingController extends AbstractController
                 $thisMonths  [] = $bookingRepository->countAllBetweenDate($firstDayOfMonth, $lastDayOfMonth);
             }
             $bookingsThisYear[] = [
-                "number" => $yearStudied->format('Y'),
-                "data" => $thisMonths,
+                 $yearStudied->format('Y') => $thisMonths,
             ];
         }
 
@@ -200,6 +198,7 @@ class BookingController extends AbstractController
             }
 
             $bookingsThisMonth[] = [
+                "id"=>$i,
                 "number" => $month->format("m"),
                 "year" => $month->format("Y"),
                 "data" => $thisMonths,
