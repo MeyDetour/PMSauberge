@@ -162,9 +162,7 @@ class BookingController extends AbstractController
                 $endDayOfYear = $endDayOfYear->modify('first day of December');
                 $this10Year  [] = $bookingRepository->countAllBetweenDate($firstDayInYear, $endDayOfYear);
             }
-            $bookingsThis10Years[] = [
-                $year2Int => $this10Year,
-            ];
+            $bookingsThis10Years[$year2Int] =   $this10Year ;
         }
 
         //get stack of 1 year
@@ -179,9 +177,7 @@ class BookingController extends AbstractController
                 $lastDayOfMonth = $yearStudied->modify('last day of ' . $listOfMonths[$m]);
                 $thisMonths  [] = $bookingRepository->countAllBetweenDate($firstDayOfMonth, $lastDayOfMonth);
             }
-            $bookingsThisYear[] = [
-                 $yearStudied->format('Y') => $thisMonths,
-            ];
+            $bookingsThisYear[     $yearStudied->format('Y') ] =   $thisMonths;
         }
 
 // Stack de X mois
@@ -197,8 +193,7 @@ class BookingController extends AbstractController
                 $thisMonths[] = $bookingRepository->countAllBetweenDate($firstHourDay, $lastHourDay);
             }
 
-            $bookingsThisMonth[] = [
-                "id"=>$i,
+            $bookingsThisMonth[$i] = [
                 "number" => $month->format("m"),
                 "year" => $month->format("Y"),
                 "data" => $thisMonths,
