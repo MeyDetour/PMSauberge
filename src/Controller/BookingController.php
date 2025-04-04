@@ -194,7 +194,7 @@ class BookingController extends AbstractController
             }
 
             $bookingsThisMonth[$i] = [
-                "number" => $month->format("m"),
+                "month" => $month->format("m"),
                 "year" => $month->format("Y"),
                 "data" => $thisMonths,
             ];
