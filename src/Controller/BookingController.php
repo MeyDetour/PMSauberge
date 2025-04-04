@@ -155,7 +155,7 @@ class BookingController extends AbstractController
             $year2Int = intval($year2->format('Y'));
 
             $this10Year = [];
-            for ($y = $year1Int; $y <= $year2Int; $y++) {
+            for ($y = $year1Int; $y <= $year2Int+1; $y++) {
                 $firstDayInYear = new DateTime("$y-01-01");
                 $firstDayInYear->modify('first day of January');
                 $endDayOfYear = new DateTimeImmutable("$y-01-01");
